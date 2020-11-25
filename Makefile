@@ -1,32 +1,37 @@
-NAME = cub3D
-CC = gcc
-CFLAGS = -Wall -Wextra -Werror -I
-## Attention Flags MLX destiné au link Linux et pas MAC. ##
-MLXFLAGS = -lmlx -lXext -lX11 -fPIC
-LIB = minilibx.a
+# **************************************************************************** #
+#                                                                              #
+#                                                         :::      ::::::::    #
+#    Makefile                                           :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: jandre <marvin@42.fr>                      +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2020/11/25 17:21:03 by jandre            #+#    #+#              #
+#    Updated: 2020/11/25 21:18:08 by jandre           ###   ########.fr        #
+#                                                                              #
+# **************************************************************************** #
 
-SRC := test.c
-OBJ := $(SRC:.c=.o)
+NAME = Cub3D
+CC = gcc
+FLAGS = -Wall -Wextra -Werror
+LIB = -I/usr/local/include -L/usr/local/lib -lmlx -L/usr/include -lm -lbsd -lX11 -lXext
+SRC = test.c
+OBJ = $(SRC:.c=.o)
 
 all: $(NAME)
 
-$(NAME): $(OBJ)
-	@echo "\033[31m\033[1mcompiling...\033[0m"
-	@$(CC) $(CFLAGS) $(MLXFLAGS) $(LIB) $(SRC) -o $(NAME)
-	@echo "Compiled!"
+$(NAME):
+	$(CC) $(SRC) $(LIB) -o $(NAME)
+
+%.o: %.c
+	$(CC) $(FLAGS) $(INC) -o $@ -c $<
 
 clean:
-	@echo "\033[31m\033[1mcleaning...\033[0m"
-	@rm -f $(OBJ)
-	@echo "objects removed!"
+	sudo rm -rf *.o
 
 fclean: clean
-	@rm -f $(NAME)
-	@echo "cub3D removed!"
+	sudo rm -rf Cub3D
 
 re: fclean
-	@make
+	make all
 
-
-
-.PHONY: all clean fclean re cube3D
+.PHONY: all clean fclean re
