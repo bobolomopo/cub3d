@@ -6,7 +6,7 @@
 /*   By: jandre <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 17:36:04 by jandre            #+#    #+#             */
-/*   Updated: 2020/11/29 16:44:35 by jandre           ###   ########.fr       */
+/*   Updated: 2020/11/29 17:12:18 by jandre           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,11 @@ void            my_mlx_pixel_put(t_img *img, int x, int y, int color)
 
     dst = img->addr + (y * img->line_length + x * (img->bits_per_pixel / 8));
     *(unsigned int*)dst = color;
+}
+
+int             closing(int keycode, t_display *dis)
+{
+    mlx_destroy_window(dis->mlx, dis->win);
 }
 
 int main()
@@ -42,6 +47,7 @@ int main()
 	}
 	my_mlx_pixel_put(&img, 5, 5, 0x00FF0000);
 	mlx_put_image_to_window(dis.mlx, dis.win, img.img, 0, 0);
+	mlx_hook(dis.win, 2, 1L<<0, closing, &dis);
 	mlx_loop(dis.mlx);
 	return (0);
 }
