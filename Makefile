@@ -17,6 +17,7 @@ LIB_LIN = -I/usr/local/include -L/usr/local/lib -lmlx -L/usr/include -lm -lbsd -
 LIB_MAC = -lmlx -lmlx -framework Appkit
 SRC = game.c
 INC = /include
+PARSING = parsing/*.c gnl/*.c utils/*.c main.c
 OBJ = $(SRC:.c=.o)
 
 all: $(NAME)
@@ -26,6 +27,9 @@ $(NAME):
 
 %.o: %.c
 	$(CC) -Wall -Wextra -Werror -Imlx -c $< -o $@
+
+parsing:
+	$(CC) -Wall -Wextra -Werror $(PARSING) -I $(INC)
 
 clean:
 	rm -rf *.o

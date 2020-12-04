@@ -14,7 +14,7 @@
 
 int             manage_key(int keycode, t_display *dis)
 {
-    if (keycode == 124 && perso.x < reso.x)
+    if (keycode == 124 && perso.x < 1000)
     {
         mlx_clear_window(dis->mlx, dis->win);
         perso.x += 5;
@@ -32,7 +32,7 @@ int             manage_key(int keycode, t_display *dis)
         perso.y -= 5;
         mlx_put_image_to_window(dis->mlx, dis->win, perso.img.img, perso.x, perso.y);
     }
-    if (keycode == 125 && perso.y < reso.y)
+    if (keycode == 125 && perso.y < 1000)
     {
         mlx_clear_window(dis->mlx, dis->win);
         perso.y += 5;
@@ -53,10 +53,8 @@ void            my_mlx_pixel_put(t_img *data, int x, int y, int color)
 
 int		main(void)
 {
-    reso.x = 1920;
-    reso.y = 1080;
     dis.mlx = mlx_init();
-    dis.win = mlx_new_window(dis.mlx, reso.x, reso.y, "Cub3D");
+    dis.win = mlx_new_window(dis.mlx, 1000, 1000, "Cub3D");
     perso.img.img = mlx_new_image(dis.mlx, 15, 15);
     perso.img.addr = mlx_get_data_addr(perso.img.img, &perso.img.bits_per_pixel,
                                         &perso.img.line_length,&perso.img.endian);
@@ -65,7 +63,7 @@ int		main(void)
     {
         perso.y = 0;
         while (perso.y++ < 10)
-            my_mlx_pixel_put(&perso.img, perso.x, perso.y, 0x00FF0000);
+            my_mlx_pixel_put(&perso.img, perso.x, perso.y, 16711680);
     }
     perso.x = 0;
     perso.y = 0;
