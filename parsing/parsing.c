@@ -12,8 +12,9 @@
 
 #include "../include/cub3D.h"
 
-static int		parsing_error(void)
+static int		parsing_error(char *ptr)
 {
+	free(ptr);
 	write(1, "Fichier .cub incorrect\n", 23);
 	exit(0);
 	return (-1);
@@ -45,21 +46,27 @@ int				parsing(int fd, t_param *param)
 	char	*line[1000];
 	int		ret;
 	int		test;
+	char	*ptr;
 
 	ret = 1;
 	while ((ret = get_next_line(fd, line)))
 	{
+		ptr = *line;
 		while (**line == ' ' || **line == '\n')
 			*line += 1;
 		if (**line && ch_comp_param(**line) == -1)
-			return (parsing_error());
+			return (parsing_error(ptr));
 		if (**line && ch_comp_param(**line) == 1)
 		{
 			if (fill_param(*line, param) < 0)
-				return (parsing_error());
+				return (parsing_error(ptr));
 		}
 		if (**line == '1')
+		{
+			free(ptr);
 			return (1);
+		}
+		free(ptr);
 	}
-	return (parsing_error());
+	return (parsing_error(ptr));
 }

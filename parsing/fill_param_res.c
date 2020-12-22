@@ -12,6 +12,17 @@
 
 #include "../include/cub3D.h"
 
+static int	check_res(int *x, int *y)
+{
+	if (x < 0 || y < 0)
+		return (-1);
+	if (*x > 1980)
+		*x = 1980;
+	if (*y > 1080)
+		*y = 1080;
+	return (1);
+}
+
 int			fill_param_res(char *line, t_param *param)
 {
 	int i;
@@ -43,5 +54,5 @@ int			fill_param_res(char *line, t_param *param)
 	while (ft_isdigit((int)line[i]) > 0)
 		i++;
 	param->res_y = ft_atoi(line + i);
-	return (1);
+	return (check_res(&param->res_x, &param->res_y));
 }
