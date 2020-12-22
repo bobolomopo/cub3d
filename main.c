@@ -47,5 +47,6 @@ int main()
 		free(param.text_north);
 	if (param.text_sprite)
 		free(param.text_sprite);
+	close(fd);
 	return (0);
 }

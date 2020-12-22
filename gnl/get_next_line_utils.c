@@ -95,7 +95,7 @@ char	*ft_strcpy(char *dst, const char *src)
 	int i;
 
 	i = 0;
-	if (ft_strlen((const char *)dst) < ft_strlen(src) || !dst || !src)
+	if (!dst || !src)
 		return (NULL);
 	while (src[i])
 	{

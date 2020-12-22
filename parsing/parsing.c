@@ -43,7 +43,7 @@ static int		is_param_filled(t_param *param)
 
 int				parsing(int fd, t_param *param)
 {
-	char	*line[1000];
+	char	*line[1];
 	int		ret;
 	int		test;
 	char	*ptr;

@@ -56,8 +56,6 @@ int		ft_initialize(int fd, char **line, char **rest)
 
 int		ft_copy(char **rest, int fd)
 {
-	char	*ptr;
-
 	if (ft_strchr(rest[fd], '\n'))
 	{
 		ft_strcpy(rest[fd], ft_strchr(rest[fd], '\n') + 1);
@@ -65,9 +63,7 @@ int		ft_copy(char **rest, int fd)
 	}
 	if (ft_strlen(rest[fd]) > 0)
 	{
-		ptr = rest[fd];
-		rest[fd] = NULL;
-		free(ptr);
+		free(rest[fd]);
 		return (0);
 	}
 	return (0);
@@ -97,8 +93,8 @@ int		get_next_line(int fd, char **line)
 	if (ret < 0 || !(*line = ft_substr(rest[fd], 0, pos(rest[fd], '\n'))))
 	{
 		free(rest[fd]);
+		free(*line);
 		return (-1);
 	}
-	free(*line);
 	return (ft_copy(rest, fd));
 }

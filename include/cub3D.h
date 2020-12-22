@@ -99,6 +99,7 @@ int			fill_param(char *line, t_param *param);
 int			fill_param_rgb(char *line, t_param *param, char c);
 int			fill_param_res(char *line, t_param *param);
 int			fill_param_char(char *line, t_param *param);
+int			fill_param_map(int fd);
 
 
 #endif
