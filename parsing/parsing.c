@@ -49,24 +49,24 @@ int				parsing(int fd, t_param *param)
 	char	*ptr;
 
 	ret = 1;
-	while ((ret = get_next_line(fd, line)))
-	{
-		ptr = *line;
-		while (**line == ' ' || **line == '\n')
-			*line += 1;
-		if (**line && ch_comp_param(**line) == -1)
-			return (parsing_error(ptr));
-		if (**line && ch_comp_param(**line) == 1)
+	if (is_param_filled(param))
+	{	
+		while ((ret = get_next_line(fd, line)))
 		{
-			if (fill_param(*line, param) < 0)
+			ptr = *line;
+			while (**line == ' ' || **line == '\n')
+				*line += 1;
+			if (**line && ch_comp_param(**line) == -1)
 				return (parsing_error(ptr));
-		}
-		if (**line == '1')
-		{
+			if (**line && ch_comp_param(**line) == 1)
+			{
+				if (fill_param(*line, param) < 0)
+					return (parsing_error(ptr));
+			}
 			free(ptr);
-			return (1);
 		}
-		free(ptr);
 	}
-	return (parsing_error(ptr));
+	if (is_param_filled(param) < 0)
+		return (parsing_error(NULL));
+	return (1);
 }
