@@ -53,6 +53,7 @@ int				parsing(int fd, t_param *param)
 	{	
 		while ((ret = get_next_line(fd, line)))
 		{
+			
 			ptr = *line;
 			while (**line == ' ' || **line == '\n')
 				*line += 1;
@@ -63,6 +64,7 @@ int				parsing(int fd, t_param *param)
 				if (fill_param(*line, param) < 0)
 					return (parsing_error(ptr));
 			}
+			printf("ret : |%d|\n", ret);
 			free(ptr);
 		}
 	}
