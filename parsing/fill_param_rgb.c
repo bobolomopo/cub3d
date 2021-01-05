@@ -21,71 +21,76 @@ static int	is_a_coma_before(char *line, int i)
 			return (1);
 		i--;
 	}
-	return (-1);
+	return (-5);
 }
 
-static int	transform_RGB(char *line, t_param *param, char c)
+static int	fill_rgb(char *line, int *color)
 {
-	int 	red;
-	int		green;
-	int		blue;
-	int		i;
+	int	i;
 
 	i = 0;
 	while (line[i] && line[i] == ' ')
 		i++;
-	red = atoi(line);
-	if (ft_nbrlen(red) > 3 || red > 255)
-		return (-1);
-	i +=  ft_nbrlen(red);
+	color[0] = atoi(line);
+	if (ft_nbrlen(color[0]) > 3 || color[0] > 255)
+		return (-5);
+	i += ft_nbrlen(color[0]);
 	while (line[i] && (line[i] == ' ' || line[i] == ','))
 		i++;
-	green = atoi(line + i);
-	if (ft_nbrlen(green) > 3 || green > 255)
-		return (-1);
-	i +=  ft_nbrlen(green);
+	color[1] = atoi(line + i);
+	if (ft_nbrlen(color[1]) > 3 || color[1] > 255)
+		return (-5);
+	i += ft_nbrlen(color[1]);
 	while (line[i] && (line[i] == ' ' || line[i] == ','))
 		i++;
-	blue = atoi(line + i);
-	if (ft_nbrlen(blue) > 3 || blue > 255)
-		return (-1);
-	i +=  ft_nbrlen(blue);
+	color[2] = atoi(line + i);
+	if (ft_nbrlen(color[2]) > 3 || color[2] > 255)
+		return (-5);
+	i += ft_nbrlen(color[2]);
+	return (i);
+}
+
+static int	transform_rgb(char *line, t_param *param, char c)
+{
+	int		color[3];
+	int		i;
+
+	if ((i = fill_rgb(line, color)) < 0)
+		return (-5);
 	while (line[i] && line[i] == ' ')
 	{
 		i++;
 		if (line[i] != ' ')
-			return (-1);
+			return (-5);
 	}
 	if (c == 'F')
-		param->floor_color = (red << 16) + (green << 8) + blue;
+		param->floor_color = (color[0] << 16) + (color[1] << 8) + color[2];
 	if (c == 'C')
-		param->ceiling_color = (red << 16) + (green << 8) + blue;
+		param->ceiling_color = (color[0] << 16) + (color[1] << 8) + color[2];
 	return (1);
 }
 
 int			fill_param_rgb(char *line, t_param *param, char c)
 {
 	int		i;
-	int 	count_coma;
+	int		count_coma;
 	int		count_space;
 
 	i = 0;
 	count_coma = 0;
 	count_space = 0;
-	if (param->ceiling_color != 0 || param->ceiling_color != 0)
-		return (-1);
 	while (line[i] && line[i] == ' ')
 		i++;
 	while (line[i])
 	{
 		if (ft_isdigit((int)line[i]) < 0 && line[i] != ',' && line[i] != '\n'
 				&& line[i] != ' ')
-			return (-1);
+			return (-5);
 		if (ft_isdigit((int)line[i]) > 0 && is_a_coma_before(line, i) > 0)
 			count_coma++;
 		i++;
 	}
 	if (count_coma != 2)
-		return (-1);
-	return (transform_RGB(line, param, c));
+		return (-5);
+	return (transform_rgb(line, param, c));
 }

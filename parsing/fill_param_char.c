@@ -38,5 +38,5 @@ int		fill_param_char(char *line, t_param *param)
 			param->text_sprite = fill_char(line + i);
 		return (1);
 	}
-	return (-1);
+	return (-4);
 }

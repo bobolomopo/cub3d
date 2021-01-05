@@ -15,6 +15,9 @@
 # ifndef BUFFER_SIZE
 #  define BUFFER_SIZE 32
 # endif
+# ifndef OPEN_MAX
+#  define OPEN_MAX 256
+# endif
 # include <math.h>
 # include <fcntl.h>
 # include <unistd.h>
@@ -22,7 +25,7 @@
 # include <stdio.h>
 # include <stdlib.h>
 # include <limits.h>
-# include <mlx.h>
+/*# include <mlx.h>*/
 
 /*structure comportant tout les parametre de mon cub3d*/
 
@@ -36,7 +39,7 @@ typedef	struct		s_param {
 	char	*text_sprite;
 	int		floor_color;
 	int		ceiling_color;
-	char	*map;
+	char	**map;
 }					t_param;
 
 /*Simple structure avec tout ce qui est nécessaire pour définir une
@@ -92,6 +95,7 @@ char		*ft_strnew(int size);
 int			ft_strlen_n(char *str, char stop);
 int			ft_nbrlen(int n);
 int			ft_isdigit(int c);
+int     	ft_isin(char c, const char *str);
 int			ft_atoi(const char *str);
 char		*fill_char(char *line);
 int			parsing(int fd, t_param *param);
@@ -99,7 +103,8 @@ int			fill_param(char *line, t_param *param);
 int			fill_param_rgb(char *line, t_param *param, char c);
 int			fill_param_res(char *line, t_param *param);
 int			fill_param_char(char *line, t_param *param);
-int			fill_param_map(int fd);
+int			fill_param_map(int fd, t_param *param);
+int			parsing_error(char *ptr, int ret);
 
 
 #endif

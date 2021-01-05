@@ -22,12 +22,12 @@ int main()
 	param.text_south = NULL;
 	param.text_east = NULL;
 	param.text_west = NULL;
-	param.floor_color = 0;
-	param.ceiling_color = 0;
+	param.floor_color = -1;
+	param.ceiling_color = -1;
 	param.text_sprite = NULL;
-	param.map = "";
+	param.map = NULL;
+	int x = 0;
 	
-
 	parsing(fd, &param);
 	printf("%d\n%d\n", param.res_x, param.res_y);
 	printf("NORD   : |%s|\n", param.text_north);
@@ -37,6 +37,16 @@ int main()
 	printf("SPRITE : |%s|\n", param.text_sprite);
 	printf("FLOOR  : |%d|\n", param.floor_color);
 	printf("CEILIN : |%d|\n", param.ceiling_color);
+	printf("\nMAP\n");
+	if (param.map)
+	{
+		while (param.map[x])
+		{
+			printf("%s\n", param.map[x]);
+			x++;
+		}
+			
+	}
 	if (param.text_south)
 		free(param.text_south);
 	if (param.text_west)
@@ -47,6 +57,13 @@ int main()
 		free(param.text_north);
 	if (param.text_sprite)
 		free(param.text_sprite);
+	x = 0;
+	if (param.map)
+	{
+		while (param.map[x])
+			free(param.map[x++]);
+	}
+	free(param.map);
 	close(fd);
 	return (0);
 }

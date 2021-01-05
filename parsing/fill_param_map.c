@@ -12,83 +12,112 @@
 
 #include "../include/cub3D.h"
 
-static int     verif(char *line)
+static int		verif(char *line)
 {
-    int     i;
+	int		i;
 
-    i = 0;
-    while (line[i++])
-    {
-        if (line[i] != ' ' && line[i] != '1' && line[i] != '0' && line[i] != '2'
-                &&line[i] != '\0')
-            return (-1);
-    }
-    return (1);
+	i = 0;
+	while (line[i])
+	{
+		if (ft_isin(line[i], "012NESW ") < 0 && line[i] != '\0')
+			return (-1);
+		i++;
+	}
+	return (1);
 }
 
-static int      verif_open(char **map)
+static int		fill_map(char **map, t_param *param)
 {
-    int     i;
-    int     j;
-    int     start;
+	int		y;
 
-    start = 0;
-    i = 0;
-    while (map[i])
-    {
-        j = 0;
-        while (map[i][j])
-        {
-            if (map[i][j] != '1' && map[i][j] != '0' && map[i][j] != ' ' && map[i][j] != '2')
-                return (-1);
-            if (map[i][j] == '0' || map[i][j] == '2')
-            {
-                if (map[i][j] == '2')
-                {
-                    if (start == 1)
-                        return (-1);
-                    start = 1;
-                }
-                if (!(map[i][j + 1]) || (map[i][j + 1] != '0' && map[i][j + 1] != '1' && map[i][j + 1] != '2'))
-                    return (-1);
-                if (!(map[i][j - 1]) || (map[i][j - 1] != '0' && map[i][j - 1] != '1' && map[i][j - 1] != '2'))
-                    return (-1);
-                if (!(map[i + 1][j]) || (map[i + 1][j] != '0' && map[i + 1][j] != '1' && map[i + 1][j] != '2'))
-                    return (-1);
-                if (!(map[i - 1][j]) || (map[i - 1][j] != '0' && map[i - 1][j] != '1' && map[i - 1][j] != '2'))
-                    return (-1);
-            }
-            j++;
-        }
-        i++;
-    }
-    return (1);
+	y = 0;
+	while (map[y] != NULL)
+		y++;
+	if (!(param->map = malloc(sizeof(char *) * y + 1)))
+		return (-1);
+	y = 0;
+	while (map[y])
+	{
+		if (!(param->map[y] = malloc(sizeof(char) * ft_strlen(map[y]) + 1)))
+			return (-1);
+		ft_strcpy(param->map[y], map[y]);
+		y++;
+	}
+	param->map[y] = NULL;
+	return (1);
 }
 
-int             fill_param_map(int fd)
+static int		valid_c(char **map, int i, int j, int start)
 {
-    char    *line[1];
-    int     ret;
-    char    *map[100];
-    int     i;
+	if (ft_isin(map[i][j], "NESW") > 0)
+	{
+		if (start == 1)
+			return (-1);
+		start = 1;
+	}
+	if (!(map[i][j + 1]) || (ft_isin(map[i][j + 1], "012NESW") < 0))
+		return (-1);
+	if (!(map[i][j - 1]) || (ft_isin(map[i][j - 1], "012NESW") < 0))
+		return (-1);
+	if (!(map[i + 1][j]) || (ft_isin(map[i + 1][j], "012NESW") < 0))
+		return (-1);
+	if (!(map[i - 1][j]) || (ft_isin(map[i - 1][j], "012NESW") < 0))
+		return (-1);
+	return (1);
+}
 
-    i = 0;
-    while ((ret = get_next_line(fd, line)) >= 0)
-    {
-        if (!(map[i] = ft_strnew(ft_strlen(*line) + 1)))
-            return (-1);
-        if (verif(*line) < 0)
-        {
-            free(*line);
-            return (-1);
-        }
-        if (*line)
-            ft_strcpy(map[i], *line);
-        free(*line);
-        i++;
-        if (ret == 0)
-            break ;
-    }
-    i = 0;
-    return (verif_open(map));
+static int		verif_open(char **map, t_param *param)
+{
+	int		i;
+	int		j;
+	int		start;
+
+	start = 0;
+	i = 0;
+	while (map[i])
+	{
+		j = 0;
+		while (j < ft_strlen(map[i]))
+		{
+			if (ft_isin(map[i][j], " 012NESW") < 0)
+				return (parsing_error(NULL, -7));
+			if (ft_isin(map[i][j], "02NESW") > 0)
+			{
+				if (valid_c(map, i, j, start) < 0)
+					return (parsing_error(NULL, -7));
+			}
+			j++;
+		}
+		i++;
+	}
+	return (fill_map(map, param));
+}
+
+int				fill_param_map(int fd, t_param *param)
+{
+	char	*line[1];
+	int		ret;
+	char	*map[100];
+	int		i;
+
+	i = 0;
+	while ((ret = get_next_line(fd, line)) >= 0)
+	{
+		if (i >= 99)
+			return (parsing_error(*line, -9));
+		if (!(map[i] = ft_strnew(ft_strlen(*line) + 1)))
+			return (-1);
+		if (verif(*line) < 0)
+		{
+			free(*line);
+			return (-7);
+		}
+		if (*line && **line != '\n')
+			ft_strcpy(map[i++], *line);
+		free(*line);
+		if (ret == 0)
+			break ;
+	}
+	map[i] = NULL;
+	return (verif_open(map, param));
 }
