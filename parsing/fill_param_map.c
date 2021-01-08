@@ -107,15 +107,14 @@ int				fill_param_map(int fd, t_param *param)
 	{
 		if (i >= 99)
 			return (parsing_error(*line, -9));
-		if (!(map[i] = ft_strnew(ft_strlen(*line) + 1)))
-			return (-1);
 		if (verif(*line) < 0)
+			return (parsing_error(*line, -7));
+		if (*line && **line != '\n' && ft_isin('1', *line) > 0)
 		{
-			free(*line);
-			return (-7);
-		}
-		if (*line && **line != '\n')
+			if (!(map[i] = ft_strnew(ft_strlen(*line) + 1)))
+				return (-1);
 			ft_strcpy(map[i++], *line);
+		}
 		free(*line);
 		if (ret == 0)
 			break ;
