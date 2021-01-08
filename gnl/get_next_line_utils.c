@@ -40,8 +40,8 @@ int		ft_strlen(const char *str)
 
 char	*ft_substr(char const *s, int start, int len)
 {
-	size_t	i;
-	size_t	j;
+	int		i;
+	int		j;
 	char	*str;
 
 	str = (char*)malloc(sizeof(*s) * (len + 1));

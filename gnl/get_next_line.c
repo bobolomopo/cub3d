@@ -92,8 +92,7 @@ int		get_next_line(int fd, char **line)
 	}
 	if (ret < 0 || !(*line = ft_substr(rest[fd], 0, pos(rest[fd], '\n'))))
 	{
-		free(rest[fd]);
-		free(*line);
+		doublefree(rest[fd], *line);
 		return (-1);
 	}
 	return (ft_copy(rest, fd));

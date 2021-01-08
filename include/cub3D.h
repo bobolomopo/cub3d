@@ -105,6 +105,6 @@ int			fill_param_res(char *line, t_param *param);
 int			fill_param_char(char *line, t_param *param);
 int			fill_param_map(int fd, t_param *param);
 int			parsing_error(char *ptr, int ret);
-
+void		doublefree(char *str, char *str2);
 
 #endif

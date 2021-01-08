@@ -44,6 +44,8 @@ static int		fill_map(char **map, t_param *param)
 		y++;
 	}
 	param->map[y] = NULL;
+	while (y-- > 0)
+		free(map[y]);
 	return (1);
 }
 

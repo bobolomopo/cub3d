@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_isin.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jandre <marvin@42.fr>                      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/01/08 12:53:30 by jandre            #+#    #+#             */
+/*   Updated: 2021/01/08 12:53:34 by jandre           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../include/cub3D.h"
 
 int		ft_isin(char c, const char *str)
@@ -12,4 +24,10 @@ int		ft_isin(char c, const char *str)
 		i++;
 	}
 	return (-1);
+}
+
+void	doublefree(char *str, char *str2)
+{
+	free(str);
+	free(str2);
 }
