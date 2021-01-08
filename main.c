@@ -26,6 +26,10 @@ int main()
 	param.ceiling_color = -1;
 	param.text_sprite = NULL;
 	param.map = NULL;
+	param.pos_x = 0;
+	param.pos_y = 0;
+	param.dir_x = 0;
+	param.dir_y = 0;
 	int x = 0;
 	
 	parsing(fd, &param);
@@ -37,6 +41,8 @@ int main()
 	printf("SPRITE : |%s|\n", param.text_sprite);
 	printf("FLOOR  : |%d|\n", param.floor_color);
 	printf("CEILIN : |%d|\n", param.ceiling_color);
+	printf("POS    : |%d, %d|\n", param.pos_x, param.pos_y);
+	printf("DIR    : |%d, %d|\n", param.dir_x, param.dir_y);
 	printf("\nMAP\n");
 	if (param.map)
 	{

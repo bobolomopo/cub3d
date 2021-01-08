@@ -18,56 +18,97 @@ int             manage_key(int keycode, t_display *dis)
     {
         mlx_clear_window(dis->mlx, dis->win);
         perso.x += 5;
+		mlx_put_image_to_window(dis->mlx, dis->win, map.img, 0, 0);
         mlx_put_image_to_window(dis->mlx, dis->win, perso.img.img, perso.x, perso.y);
     }
     if (keycode == 123 && perso.x > 0)
     {
         mlx_clear_window(dis->mlx, dis->win);
         perso.x -= 5;
+		mlx_put_image_to_window(dis->mlx, dis->win, map.img, 0, 0);
         mlx_put_image_to_window(dis->mlx, dis->win, perso.img.img, perso.x, perso.y);
     }
     if (keycode == 126 && perso.y > 0)
     {
         mlx_clear_window(dis->mlx, dis->win);
         perso.y -= 5;
+		mlx_put_image_to_window(dis->mlx, dis->win, map.img, 0, 0);
         mlx_put_image_to_window(dis->mlx, dis->win, perso.img.img, perso.x, perso.y);
     }
     if (keycode == 125 && perso.y < 1000)
     {
         mlx_clear_window(dis->mlx, dis->win);
         perso.y += 5;
+		mlx_put_image_to_window(dis->mlx, dis->win, map.img, 0, 0);
         mlx_put_image_to_window(dis->mlx, dis->win, perso.img.img, perso.x, perso.y);
     }
     if (keycode == 53)
-        mlx_destroy_window(dis->mlx, dis->win);
+        ft_close();
     return (0);
 }
 
-void            my_mlx_pixel_put(t_img *data, int x, int y, int color)
+void	ft_define_map(t_param *param)
 {
-    char    *dst;
+	int     i;
+	int     j;
 
-    dst = data->addr + (y * data->line_length + x * (data->bits_per_pixel / 8));
-    *(unsigned int*)dst = color;
+	i = 0;
+	while (param->map[i])
+	{
+		j = 0;
+		while (param->map[i][j])
+			j++;
+		if (j > param->map_w)
+			param->map_w = j;
+		i++;
+	}
+	param->map_h = i;
+	}
+
+int		initialize(t_param *param)
+{
+	fd = open("./test.cub", O_RDONLY);
+	param->res_x = 0;
+	param->res_y = 0;
+	param->text_north = NULL;
+	param->text_south = NULL;
+	param->text_east = NULL;
+	param->text_west = NULL;
+	param->floor_color = -1;
+	param->ceiling_color = -1;
+	param->text_sprite = NULL;
+	param->map = NULL;
+	param->pos_x = 0;
+	param->pos_y = 0;
+	param->dir_x = 0;
+	param->dir_y = 0;
+	if (parsing(fd, param) < 0)
+		return (-1);
+	if (param->dir_x != 0)
+		plan.x = 0;
+	if (param->dir_y != 0)
+		plan.x = 1;
+	plan.y = 0.66;
+	ft_define_map(param);
+	return (1);
 }
 
 int		main(void)
 {
+    if (initialize(&param) < 0)
+        return (-1);
     dis.mlx = mlx_init();
-    dis.win = mlx_new_window(dis.mlx, 1000, 1000, "Cub3D");
-    perso.img.img = mlx_new_image(dis.mlx, 15, 15);
-    perso.img.addr = mlx_get_data_addr(perso.img.img, &perso.img.bits_per_pixel,
-                                        &perso.img.line_length,&perso.img.endian);
-    perso.x = 0;
-    while (perso.x++ < 10)
-    {
-        perso.y = 0;
-        while (perso.y++ < 10)
-            my_mlx_pixel_put(&perso.img, perso.x, perso.y, 16711680);
-    }
-    perso.x = 0;
-    perso.y = 0;
-    mlx_put_image_to_window(dis.mlx, dis.win, perso.img.img, perso.x, perso.y);
+    dis.win = mlx_new_window(dis.mlx, param.res_x, param.res_y, "Cub3D");
+	map.img = mlx_new_image(dis.mlx, param.res_x, param.res_y);
+	map.addr = mlx_get_data_addr(map.img, &map.bits_per_pixel, &map.line_length,&map.endian);
+	draw_map(&map);
+	perso.img.img = mlx_new_image(dis.mlx, 20, 20);
+	perso.img.addr = mlx_get_data_addr(perso.img.img, &perso.img.bits_per_pixel, &perso.img.line_length,&perso.img.endian);
+	draw_player(&perso);
+	mlx_put_image_to_window(dis.mlx, dis.win, map.img, 0, 0);
+	perso.x = param.pos_x * GRIDSIZE + GRIDSIZE / 4;
+	perso.y = param.pos_y * GRIDSIZE + GRIDSIZE / 4;
+	mlx_put_image_to_window(dis.mlx, dis.win, perso.img.img, perso.x, perso.y);
     mlx_hook(dis.win, 2, 1L<<0, manage_key, &dis);
     mlx_loop(dis.mlx);
     return (0);

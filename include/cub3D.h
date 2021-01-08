@@ -15,6 +15,9 @@
 # ifndef BUFFER_SIZE
 #  define BUFFER_SIZE 32
 # endif
+# ifndef GRIDSIZE
+#  define GRIDSIZE 60
+# endif
 # ifndef OPEN_MAX
 #  define OPEN_MAX 256
 # endif
@@ -25,11 +28,13 @@
 # include <stdio.h>
 # include <stdlib.h>
 # include <limits.h>
-/*# include <mlx.h>*/
+# include <mlx.h>
 
-/*structure comportant tout les parametre de mon cub3d*/
+/*
+**structure comportant tout les parametre de mon cub3d
+*/
 
-typedef	struct		s_param {
+typedef	struct		s_param 	{
 	int		res_x;
 	int		res_y;
 	char	*text_north;
@@ -40,47 +45,76 @@ typedef	struct		s_param {
 	int		floor_color;
 	int		ceiling_color;
 	char	**map;
+	int		map_w;
+	int		map_h;
+	double	pos_x;
+	double	pos_y;
+	double	dir_x;
+	double	dir_y;
 }					t_param;
 
-/*Simple structure avec tout ce qui est nécessaire pour définir une
-image*/
+/*
+**structure pour le plan devant le perso
+*/
 
-typedef struct	s_img		{
+typedef struct		s_cam 		{
+	double	x;
+	double	y;
+}					t_cam;
+
+/*
+**simple structure avec tout ce qui est nécessaire pour définir une
+**image
+*/
+
+typedef struct		s_img		{
 	void	*img;
 	char	*addr;
 	int		bits_per_pixel;
 	int		line_length;
 	int		endian;
-}		t_img;
+}					t_img;
 
-/*ecran et moniteur sur lequel s'affiche la fenetre, peut-être réunir
-avec la résolution*/
+/*
+**ecran et moniteur sur lequel s'affiche la fenetre, peut-être réunir
+**avec la résolution
+*/
 
-typedef struct	s_display	{
+typedef struct		s_display	{
 	void	*mlx;
 	void	*win;
-}		t_display;
+}					t_display;
 
-/*contiendra la position en temps réel du point de vue du personnage
-pourra peut-être aussi directement contenir la position de base
-surement pas nécessaire.*/
+/*
+**contiendra la position en temps réel du point de vue du personnage
+**pourra peut-être aussi directement contenir la position de base
+**surement pas nécessaire.
+*/
 
-typedef struct	s_perso		{
+typedef struct	s_perso			{
 	int	x;
 	int	y;
 	t_img	img;
-}		t_perso;
+}					t_perso;
 
-/*structure contenant la résolution de l'écran, devras faire une 
-vérification d'erreur pour pouvoir la séparer en parts éégales.
-intéressants de le réunir avec d'autres variables en une structure
-peut-être*/
+/*
+**structure contenant la résolution de l'écran, devras faire une 
+**vérification d'erreur pour pouvoir la séparer en parts éégales.
+**intéressants de le réunir avec d'autres variables en une structure
+**peut-être
+*/
 
-/*Valeurs définies par défauts pour les tests, plus tard elles
-viendront du fichier .cub*/
+/*
+**Valeurs définies par défauts pour les tests, plus tard elles
+**viendront du fichier .cub
+*/
 
 t_display	dis;
 t_perso		perso;
+t_img		map;
+t_param		param;
+t_cam		plan;
+int			fd;
 
 int			ft_strlen(const char *str);
 char		*ft_substr(char const *s, int start, int len);
@@ -106,5 +140,12 @@ int			fill_param_char(char *line, t_param *param);
 int			fill_param_map(int fd, t_param *param);
 int			parsing_error(char *ptr, int ret);
 void		doublefree(char *str, char *str2);
+void    	direction(char c, t_param *param);
+void		my_mlx_pixel_put(t_img *data, int x, int y, int color);
+int			initialize(t_param *param);
+void		ft_close();
+void		draw_map(t_img *map);
+void		color_square(t_img *img, int x, int y, int color);
+void    	draw_player(t_perso *perso);
 
 #endif
