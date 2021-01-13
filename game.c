@@ -12,75 +12,6 @@
 
 #include "include/cub3D.h"
 
-int             manage_key(int keycode)
-{
-	double	move_speed;
-	double	old_dir;
-	double	rot_speed;
-
-	move_speed = 0.1;
-	rot_speed = 0.08;
-    if (keycode == 124)
-    {
-		mlx_destroy_image(dis.mlx, game.img.img);
-        mlx_clear_window(dis.mlx, dis.win);
-		game.img.img = mlx_new_image(dis.mlx, param.res_x, param.res_y);
-		game.img.addr = mlx_get_data_addr(game.img.img, &game.img.bits_per_pixel, &game.img.line_length, &game.img.endian);
-		old_dir = param.dir_x;
-		param.dir_x = param.dir_x * cos(-rot_speed) - param.dir_y * sin(-rot_speed);
-		param.dir_y = old_dir * sin(-rot_speed) + param.dir_y * cos(-rot_speed);
-		old_plane_x = plane_x;
-		plane_x = (plane_x * cos(-rot_speed)) - (plane_y * sin(-rot_speed));
-		plane_y = old_plane_x * sin(-rot_speed) + plane_y * cos(-rot_speed);
-		raycasting();
-		mlx_put_image_to_window(dis.mlx, dis.win, game.img.img, 0, 0);
-    }
-    if (keycode == 123)
-    {
-		mlx_destroy_image(dis.mlx, game.img.img);
-        mlx_clear_window(dis.mlx, dis.win);
-		game.img.img = mlx_new_image(dis.mlx, param.res_x, param.res_y);
-		game.img.addr = mlx_get_data_addr(game.img.img, &game.img.bits_per_pixel, &game.img.line_length, &game.img.endian);
-		old_dir = param.dir_x;
-		param.dir_x = param.dir_x * cos(rot_speed) - param.dir_y * sin(rot_speed);
-		param.dir_y = old_dir * sin(rot_speed) + param.dir_y * cos(rot_speed);
-		old_plane_x = plane_x;
-		plane_x = plane_x * cos(rot_speed) - plane_y * sin(rot_speed);
-		plane_y = old_plane_x * sin(rot_speed) + plane_y * cos(rot_speed);
-		raycasting();
-		mlx_put_image_to_window(dis.mlx, dis.win, game.img.img, 0, 0);
-    }
-    if (keycode == 126)
-    {
-		mlx_destroy_image(dis.mlx, game.img.img);
-        mlx_clear_window(dis.mlx, dis.win);
-		game.img.img = mlx_new_image(dis.mlx, param.res_x, param.res_y);
-		game.img.addr = mlx_get_data_addr(game.img.img, &game.img.bits_per_pixel, &game.img.line_length, &game.img.endian);
-		if (param.map[(int)(param.pos_x + param.dir_x * move_speed)][(int)param.pos_y])
-			param.pos_x += param.dir_x * move_speed;
-		if (param.map[(int)param.pos_x][(int)(param.pos_y + param.dir_y * move_speed)])
-			param.pos_y += param.dir_y * move_speed;
-		raycasting();
-		mlx_put_image_to_window(dis.mlx, dis.win, game.img.img, 0, 0);
-    }
-    if (keycode == 125)
-    {
-		mlx_destroy_image(dis.mlx, game.img.img);
-        mlx_clear_window(dis.mlx, dis.win);
-		game.img.img = mlx_new_image(dis.mlx, param.res_x, param.res_y);
-		game.img.addr = mlx_get_data_addr(game.img.img, &game.img.bits_per_pixel, &game.img.line_length, &game.img.endian);
-		if (param.map[(int)(param.pos_x - param.dir_x * move_speed)][(int)param.pos_y])
-			param.pos_x -= param.dir_x * move_speed;
-		if (param.map[(int)param.pos_x][(int)(param.pos_y - param.dir_y * move_speed)])
-			param.pos_y -= param.dir_y * move_speed;
-		raycasting();
-		mlx_put_image_to_window(dis.mlx, dis.win, game.img.img, 0, 0);
-    }
-    if (keycode == 53)
-        ft_close();
-    return (0);
-}
-
 void	ft_define_map(t_param *param)
 {
 	int     i;
@@ -97,7 +28,7 @@ void	ft_define_map(t_param *param)
 		i++;
 	}
 	param->map_h = i;
-	}
+}
 
 int		initialize(t_param *param)
 {
@@ -122,21 +53,25 @@ int		initialize(t_param *param)
 	return (1);
 }
 
-int		main(void)
+int main()
 {
-    if (initialize(&param) < 0)
+	if (initialize(&param) < 0)
         return (-1);
+	posX = param.pos_x;
+	posY = param.pos_y;
+	dirX = param.dir_x;
+	dirY = param.dir_y;
 	dis.mlx = mlx_init();
 	dis.win = mlx_new_window(dis.mlx, param.res_x, param.res_y, "Cub3D");
 	game.img.img = mlx_new_image(dis.mlx, param.res_x, param.res_y);
 	game.img.addr = mlx_get_data_addr(game.img.img, &game.img.bits_per_pixel, &game.img.line_length, &game.img.endian);
+	draw_ceil_floor(param.res_x, param.res_y);
 	raycasting();
 	mlx_put_image_to_window(dis.mlx, dis.win, game.img.img, 0, 0);
 	mlx_hook(dis.win, 2, 1L<<0, manage_key, &dis);
     mlx_loop(dis.mlx);
-    return (0);
+	return (0);
 }
-
 
 /* 
 void    *mlx_init();

@@ -169,8 +169,12 @@ void		doublefree(char *str, char *str2);
 void    	direction(char c, t_param *param);
 void		my_mlx_pixel_put(t_img *data, int x, int y, int color);
 int			initialize();
+void		ft_define_map(t_param *param);
 void		ft_close();
 void		draw_ver_line(int x, int drawStart, int drawEnd, int color);
+void		draw_ceil_floor(int width, int height);
 void		raycasting();
+int			manage_key(int keycode);
+
 
 #endif

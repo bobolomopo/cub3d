@@ -17,7 +17,7 @@ LIB_LIN = -I/usr/local/include -L/usr/local/lib -lmlx -L/usr/include -lm -lbsd -
 LIB_MAC = -lmlx -lmlx -framework Appkit
 SRC = game.c parsing/*.c gnl/*.c utils/*.c raycasting/*.c
 INC = /include
-PARSING = parsing/*.c gnl/*.c utils/*.c main.c
+PARSING = parsing/*.c gnl/*.c utils/*.c main.c raycasting/*.c
 OBJ = $(SRC:.c=.o)
 
 all: $(NAME)

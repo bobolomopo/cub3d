@@ -95,6 +95,63 @@ int		manage_key(int keycode)
 	return (1);
 }
 
+static void raycasting_init(int x)
+{
+	camera_x = 2 * x / (double)param.res_x - 1;
+	ray_dir_x = dirX + planeX * camera_x;
+	ray_dir_y = dirY + plane_y * camera_x;
+	map_x = (int)(posX);
+	map_y = (int)(posY);
+	delta_dist_x = fabs(1 / ray_dir_x);
+	delta_dist_y = fabs(1 / ray_dir_y);
+	hit = 0;
+}
+
+static void raycasting_init2(int x)
+{
+	if(ray_dir_x < 0)
+	{
+		step_x = -1;
+		side_dist_x = (posX - map_x) * delta_dist_x;
+	}
+	else
+	{
+		step_x = 1;
+		side_dist_x = (map_x + 1.0 - posX) * delta_dist_x;
+	}
+	if(ray_dir_y < 0)
+	{
+		step_y = -1;
+		side_dist_y = (posY - map_y) * delta_dist_y;
+	}
+	else
+	{
+		step_y = 1;
+		side_dist_y = (map_y + 1.0 - posY) * delta_dist_y;
+	}
+}
+
+static void	raycasting_dda()
+{
+	while (hit == 0)
+	{
+		if(side_dist_x < side_dist_y)
+		{
+		side_dist_x += delta_dist_x;
+		map_x += step_x;
+		side = 0;
+		}
+		else
+		{
+			side_dist_y += delta_dist_y;
+			map_y += step_y;
+			side = 1;
+		}
+		if (param.map[map_x][map_y] != '0')
+			hit = 1;
+	}
+}
+
 void raycasting()
 {
 	int		color;
@@ -103,50 +160,9 @@ void raycasting()
 	x = 0;
 	while (x++ < param.res_x)
 	{
-		camera_x = 2 * x / (double)param.res_x - 1;
-		ray_dir_x = dirX + planeX * camera_x;
-		ray_dir_y = dirY + plane_y * camera_x;
-		map_x = (int)(posX);
-		map_y = (int)(posY);
-		delta_dist_x = fabs(1 / ray_dir_x);
-		delta_dist_y = fabs(1 / ray_dir_y);
-		hit = 0;
-		if(ray_dir_x < 0)
-		{
-			step_x = -1;
-			side_dist_x = (posX - map_x) * delta_dist_x;
-		}
-		else
-		{
-			step_x = 1;
-			side_dist_x = (map_x + 1.0 - posX) * delta_dist_x;
-		}
-		if(ray_dir_y < 0)
-		{
-			step_y = -1;
-			side_dist_y = (posY - map_y) * delta_dist_y;
-		}
-		else
-		{
-			step_y = 1;
-			side_dist_y = (map_y + 1.0 - posY) * delta_dist_y;
-		}
-		while (hit == 0)
-		{
-			if(side_dist_x < side_dist_y)
-			{
-			side_dist_x += delta_dist_x;
-			map_x += step_x;
-			side = 0;
-		}
-		else
-		{
-			side_dist_y += delta_dist_y;
-			map_y += step_y;
-			side = 1;
-		}
-		if(param.map[map_x][map_y] != '0') hit = 1;
-		}
+		raycasting_init(x);
+		raycasting_init2(x);
+		raycasting_dda();
 		if (side == 0)
 			perp_wall_dist = (map_x - posX + (1 - step_x) / 2) / ray_dir_x;
 		else
