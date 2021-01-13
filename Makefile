@@ -15,7 +15,7 @@ CC = gcc
 FLAGS = -Wall -Wextra -Werror
 LIB_LIN = -I/usr/local/include -L/usr/local/lib -lmlx -L/usr/include -lm -lbsd -lX11 -lXext
 LIB_MAC = -lmlx -lmlx -framework Appkit
-SRC = game.c parsing/*.c gnl/*.c utils/*.c
+SRC = game.c parsing/*.c gnl/*.c utils/*.c raycasting/*.c
 INC = /include
 PARSING = parsing/*.c gnl/*.c utils/*.c main.c
 OBJ = $(SRC:.c=.o)

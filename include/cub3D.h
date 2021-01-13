@@ -21,6 +21,9 @@
 # ifndef OPEN_MAX
 #  define OPEN_MAX 256
 # endif
+# ifndef PI
+#  define PI 3.141592653589
+# endif
 # include <math.h>
 # include <fcntl.h>
 # include <unistd.h>
@@ -91,11 +94,12 @@ typedef struct		s_display	{
 **surement pas nécessaire.
 */
 
-typedef struct	s_perso			{
-	int	x;
-	int	y;
+typedef struct		s_game		{
+	int		pos_x;
+	int		pos_y;
+	float	angle;
 	t_img	img;
-}					t_perso;
+}					t_game;
 
 /*
 **structure contenant la résolution de l'écran, devras faire une 
@@ -110,11 +114,19 @@ typedef struct	s_perso			{
 */
 
 t_display	dis;
-t_perso		perso;
-t_img		map;
+t_game		game;
 t_param		param;
-t_cam		plan;
 int			fd;
+double		plane_x;
+double		plane_y;
+double		old_plane_x;
+double		old_plane_y;
+double		posX;
+double		posY;
+double		dirX;
+double		dirY;
+double		planeX;
+double		planeY;
 
 int			ft_strlen(const char *str);
 char		*ft_substr(char const *s, int start, int len);
@@ -142,10 +154,9 @@ int			parsing_error(char *ptr, int ret);
 void		doublefree(char *str, char *str2);
 void    	direction(char c, t_param *param);
 void		my_mlx_pixel_put(t_img *data, int x, int y, int color);
-int			initialize(t_param *param);
+int			initialize();
 void		ft_close();
-void		draw_map(t_img *map);
-void		color_square(t_img *img, int x, int y, int color);
-void    	draw_player(t_perso *perso);
+void		draw_ver_line(int x, int drawStart, int drawEnd, int color);
+void		raycasting();
 
 #endif
