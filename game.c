@@ -12,35 +12,69 @@
 
 #include "include/cub3D.h"
 
-int             manage_key(int keycode, t_display *dis)
+int             manage_key(int keycode)
 {
-    if (keycode == 124 && perso.x < 1000)
+	double	move_speed;
+	double	old_dir;
+	double	rot_speed;
+
+	move_speed = 0.1;
+	rot_speed = 0.08;
+    if (keycode == 124)
     {
-        mlx_clear_window(dis->mlx, dis->win);
-        perso.x += 5;
-		mlx_put_image_to_window(dis->mlx, dis->win, map.img, 0, 0);
-        mlx_put_image_to_window(dis->mlx, dis->win, perso.img.img, perso.x, perso.y);
+		mlx_destroy_image(dis.mlx, game.img.img);
+        mlx_clear_window(dis.mlx, dis.win);
+		game.img.img = mlx_new_image(dis.mlx, param.res_x, param.res_y);
+		game.img.addr = mlx_get_data_addr(game.img.img, &game.img.bits_per_pixel, &game.img.line_length, &game.img.endian);
+		old_dir = param.dir_x;
+		param.dir_x = param.dir_x * cos(-rot_speed) - param.dir_y * sin(-rot_speed);
+		param.dir_y = old_dir * sin(-rot_speed) + param.dir_y * cos(-rot_speed);
+		old_plane_x = plane_x;
+		plane_x = (plane_x * cos(-rot_speed)) - (plane_y * sin(-rot_speed));
+		plane_y = old_plane_x * sin(-rot_speed) + plane_y * cos(-rot_speed);
+		raycasting();
+		mlx_put_image_to_window(dis.mlx, dis.win, game.img.img, 0, 0);
     }
-    if (keycode == 123 && perso.x > 0)
+    if (keycode == 123)
     {
-        mlx_clear_window(dis->mlx, dis->win);
-        perso.x -= 5;
-		mlx_put_image_to_window(dis->mlx, dis->win, map.img, 0, 0);
-        mlx_put_image_to_window(dis->mlx, dis->win, perso.img.img, perso.x, perso.y);
+		mlx_destroy_image(dis.mlx, game.img.img);
+        mlx_clear_window(dis.mlx, dis.win);
+		game.img.img = mlx_new_image(dis.mlx, param.res_x, param.res_y);
+		game.img.addr = mlx_get_data_addr(game.img.img, &game.img.bits_per_pixel, &game.img.line_length, &game.img.endian);
+		old_dir = param.dir_x;
+		param.dir_x = param.dir_x * cos(rot_speed) - param.dir_y * sin(rot_speed);
+		param.dir_y = old_dir * sin(rot_speed) + param.dir_y * cos(rot_speed);
+		old_plane_x = plane_x;
+		plane_x = plane_x * cos(rot_speed) - plane_y * sin(rot_speed);
+		plane_y = old_plane_x * sin(rot_speed) + plane_y * cos(rot_speed);
+		raycasting();
+		mlx_put_image_to_window(dis.mlx, dis.win, game.img.img, 0, 0);
     }
-    if (keycode == 126 && perso.y > 0)
+    if (keycode == 126)
     {
-        mlx_clear_window(dis->mlx, dis->win);
-        perso.y -= 5;
-		mlx_put_image_to_window(dis->mlx, dis->win, map.img, 0, 0);
-        mlx_put_image_to_window(dis->mlx, dis->win, perso.img.img, perso.x, perso.y);
+		mlx_destroy_image(dis.mlx, game.img.img);
+        mlx_clear_window(dis.mlx, dis.win);
+		game.img.img = mlx_new_image(dis.mlx, param.res_x, param.res_y);
+		game.img.addr = mlx_get_data_addr(game.img.img, &game.img.bits_per_pixel, &game.img.line_length, &game.img.endian);
+		if (param.map[(int)(param.pos_x + param.dir_x * move_speed)][(int)param.pos_y])
+			param.pos_x += param.dir_x * move_speed;
+		if (param.map[(int)param.pos_x][(int)(param.pos_y + param.dir_y * move_speed)])
+			param.pos_y += param.dir_y * move_speed;
+		raycasting();
+		mlx_put_image_to_window(dis.mlx, dis.win, game.img.img, 0, 0);
     }
-    if (keycode == 125 && perso.y < 1000)
+    if (keycode == 125)
     {
-        mlx_clear_window(dis->mlx, dis->win);
-        perso.y += 5;
-		mlx_put_image_to_window(dis->mlx, dis->win, map.img, 0, 0);
-        mlx_put_image_to_window(dis->mlx, dis->win, perso.img.img, perso.x, perso.y);
+		mlx_destroy_image(dis.mlx, game.img.img);
+        mlx_clear_window(dis.mlx, dis.win);
+		game.img.img = mlx_new_image(dis.mlx, param.res_x, param.res_y);
+		game.img.addr = mlx_get_data_addr(game.img.img, &game.img.bits_per_pixel, &game.img.line_length, &game.img.endian);
+		if (param.map[(int)(param.pos_x - param.dir_x * move_speed)][(int)param.pos_y])
+			param.pos_x -= param.dir_x * move_speed;
+		if (param.map[(int)param.pos_x][(int)(param.pos_y - param.dir_y * move_speed)])
+			param.pos_y -= param.dir_y * move_speed;
+		raycasting();
+		mlx_put_image_to_window(dis.mlx, dis.win, game.img.img, 0, 0);
     }
     if (keycode == 53)
         ft_close();
@@ -84,11 +118,6 @@ int		initialize(t_param *param)
 	param->dir_y = 0;
 	if (parsing(fd, param) < 0)
 		return (-1);
-	if (param->dir_x != 0)
-		plan.x = 0;
-	if (param->dir_y != 0)
-		plan.x = 1;
-	plan.y = 0.66;
 	ft_define_map(param);
 	return (1);
 }
@@ -97,19 +126,13 @@ int		main(void)
 {
     if (initialize(&param) < 0)
         return (-1);
-    dis.mlx = mlx_init();
-    dis.win = mlx_new_window(dis.mlx, param.res_x, param.res_y, "Cub3D");
-	map.img = mlx_new_image(dis.mlx, param.res_x, param.res_y);
-	map.addr = mlx_get_data_addr(map.img, &map.bits_per_pixel, &map.line_length,&map.endian);
-	draw_map(&map);
-	perso.img.img = mlx_new_image(dis.mlx, 20, 20);
-	perso.img.addr = mlx_get_data_addr(perso.img.img, &perso.img.bits_per_pixel, &perso.img.line_length,&perso.img.endian);
-	draw_player(&perso);
-	mlx_put_image_to_window(dis.mlx, dis.win, map.img, 0, 0);
-	perso.x = param.pos_x * GRIDSIZE + GRIDSIZE / 4;
-	perso.y = param.pos_y * GRIDSIZE + GRIDSIZE / 4;
-	mlx_put_image_to_window(dis.mlx, dis.win, perso.img.img, perso.x, perso.y);
-    mlx_hook(dis.win, 2, 1L<<0, manage_key, &dis);
+	dis.mlx = mlx_init();
+	dis.win = mlx_new_window(dis.mlx, param.res_x, param.res_y, "Cub3D");
+	game.img.img = mlx_new_image(dis.mlx, param.res_x, param.res_y);
+	game.img.addr = mlx_get_data_addr(game.img.img, &game.img.bits_per_pixel, &game.img.line_length, &game.img.endian);
+	raycasting();
+	mlx_put_image_to_window(dis.mlx, dis.win, game.img.img, 0, 0);
+	mlx_hook(dis.win, 2, 1L<<0, manage_key, &dis);
     mlx_loop(dis.mlx);
     return (0);
 }

@@ -13,6 +13,27 @@ void	draw_ver_line(int x, int drawStart, int drawEnd, int color)
 	}
 }
 
+void	draw_ceil_floor(int width, int height)
+{
+	int		x;
+	int		y;
+
+	x = 0;
+	while (x < width)
+	{
+		y = 0;
+		while (y < height)
+		{
+			if (y < height / 2)
+				my_mlx_pixel_put(&game.img, x, y, param.floor_color);
+			else
+				my_mlx_pixel_put(&game.img, x, y, param.ceiling_color);
+			y++;
+		}
+		x++;
+	}
+}
+
 int		manage_key(int keycode)
 {
 //timing for input and FPS counter
@@ -22,62 +43,50 @@ int		manage_key(int keycode)
 	//move forward if no wall in front of you
 	if(keycode == 126)
 	{
-		mlx_destroy_image(dis.mlx, game.img.img);
-        mlx_clear_window(dis.mlx, dis.win);
-		game.img.img = mlx_new_image(dis.mlx, param.res_x, param.res_y);
-		game.img.addr = mlx_get_data_addr(game.img.img, &game.img.bits_per_pixel, &game.img.line_length, &game.img.endian);
 		if ((param.map[(int)(posX + dirX * moveSpeed)][(int)(posY)]) == '0')
 			posX += dirX * moveSpeed;
 		if ((param.map[(int)(posX)][(int)(posY + dirY * moveSpeed)]) == '0')
 			posY += dirY * moveSpeed;
+		draw_ceil_floor(param.res_x, param.res_y);
 		raycasting();
 		mlx_put_image_to_window(dis.mlx, dis.win, game.img.img, 0, 0);
 	}
 	//move backwards if no wall behind you
 	if(keycode == 125)
 	{
-		mlx_destroy_image(dis.mlx, game.img.img);
-        mlx_clear_window(dis.mlx, dis.win);
-		game.img.img = mlx_new_image(dis.mlx, param.res_x, param.res_y);
-		game.img.addr = mlx_get_data_addr(game.img.img, &game.img.bits_per_pixel, &game.img.line_length, &game.img.endian);
 		if ((param.map[(int)(posX - dirX * moveSpeed)][(int)(posY)]) == '0')
 			posX -= dirX * moveSpeed;
 		if ((param.map[(int)(posX)][(int)(posY - dirY * moveSpeed)]) == '0')
 			posY -= dirY * moveSpeed;
+		draw_ceil_floor(param.res_x, param.res_y);
 		raycasting();
 		mlx_put_image_to_window(dis.mlx, dis.win, game.img.img, 0, 0);
 	}
 	//rotate to the right
 	if(keycode == 124)
 	{
-		mlx_destroy_image(dis.mlx, game.img.img);
-        mlx_clear_window(dis.mlx, dis.win);
-		game.img.img = mlx_new_image(dis.mlx, param.res_x, param.res_y);
-		game.img.addr = mlx_get_data_addr(game.img.img, &game.img.bits_per_pixel, &game.img.line_length, &game.img.endian);
 		//both camera direction and camera plane must be rotated
 		double oldDirX = dirX;
 		dirX = dirX * cos(-rotSpeed) - dirY * sin(-rotSpeed);
 		dirY = oldDirX * sin(-rotSpeed) + dirY * cos(-rotSpeed);
 		double oldPlaneX = planeX;
-		planeX = planeX * cos(-rotSpeed) - planeY * sin(-rotSpeed);
-		planeY = oldPlaneX * sin(-rotSpeed) + planeY * cos(-rotSpeed);
+		planeX = planeX * cos(-rotSpeed) - plane_y * sin(-rotSpeed);
+		plane_y = oldPlaneX * sin(-rotSpeed) + plane_y * cos(-rotSpeed);
+		draw_ceil_floor(param.res_x, param.res_y);
 		raycasting();
 		mlx_put_image_to_window(dis.mlx, dis.win, game.img.img, 0, 0);
 	}
 	//rotate to the left
 	if(keycode == 123)
 	{
-		mlx_destroy_image(dis.mlx, game.img.img);
-        mlx_clear_window(dis.mlx, dis.win);
-		game.img.img = mlx_new_image(dis.mlx, param.res_x, param.res_y);
-		game.img.addr = mlx_get_data_addr(game.img.img, &game.img.bits_per_pixel, &game.img.line_length, &game.img.endian);
 		//both camera direction and camera plane must be rotated
 		double oldDirX = dirX;
 		dirX = dirX * cos(rotSpeed) - dirY * sin(rotSpeed);
 		dirY = oldDirX * sin(rotSpeed) + dirY * cos(rotSpeed);
 		double oldPlaneX = planeX;
-		planeX = planeX * cos(rotSpeed) - planeY * sin(rotSpeed);
-		planeY = oldPlaneX * sin(rotSpeed) + planeY * cos(rotSpeed);
+		planeX = planeX * cos(rotSpeed) - plane_y * sin(rotSpeed);
+		plane_y = oldPlaneX * sin(rotSpeed) + plane_y * cos(rotSpeed);
+		draw_ceil_floor(param.res_x, param.res_y);
 		raycasting();
 		mlx_put_image_to_window(dis.mlx, dis.win, game.img.img, 0, 0);
 	}
@@ -88,89 +97,67 @@ int		manage_key(int keycode)
 
 void raycasting()
 {
-	for(int x = 0; x < param.res_x; x++)
+	int		color;
+	int		x;
+
+	x = 0;
+	while (x++ < param.res_x)
 	{
-		//calculate ray position and direction
-		double cameraX = 2 * x / (double)param.res_x - 1; //x-coordinate in camera space
-		double rayDirX = dirX + planeX * cameraX;
-		double rayDirY = dirY + planeY * cameraX;
-		//which box of the map we're in
-		int mapX = (int)(posX);
-		int mapY = (int)(posY);
-
-		//length of ray from current position to next x or y-side
-		double sideDistX;
-		double sideDistY;
-
-		//length of ray from one x or y-side to next x or y-side
-		double deltaDistX = fabs(1 / rayDirX);
-		double deltaDistY = fabs(1 / rayDirY);
-		double perpWallDist;
-
-		//what direction to step in x or y-direction (either +1 or -1)
-		int stepX;
-		int stepY;
-
-		int hit = 0; //was there a wall hit?
-		int side; //was a NS or a EW wall hit?
-		//calculate step and initial sideDist
-		if(rayDirX < 0)
+		camera_x = 2 * x / (double)param.res_x - 1;
+		ray_dir_x = dirX + planeX * camera_x;
+		ray_dir_y = dirY + plane_y * camera_x;
+		map_x = (int)(posX);
+		map_y = (int)(posY);
+		delta_dist_x = fabs(1 / ray_dir_x);
+		delta_dist_y = fabs(1 / ray_dir_y);
+		hit = 0;
+		if(ray_dir_x < 0)
 		{
-			stepX = -1;
-			sideDistX = (posX - mapX) * deltaDistX;
+			step_x = -1;
+			side_dist_x = (posX - map_x) * delta_dist_x;
 		}
 		else
 		{
-			stepX = 1;
-			sideDistX = (mapX + 1.0 - posX) * deltaDistX;
+			step_x = 1;
+			side_dist_x = (map_x + 1.0 - posX) * delta_dist_x;
 		}
-		if(rayDirY < 0)
+		if(ray_dir_y < 0)
 		{
-			stepY = -1;
-			sideDistY = (posY - mapY) * deltaDistY;
+			step_y = -1;
+			side_dist_y = (posY - map_y) * delta_dist_y;
 		}
 		else
 		{
-			stepY = 1;
-			sideDistY = (mapY + 1.0 - posY) * deltaDistY;
+			step_y = 1;
+			side_dist_y = (map_y + 1.0 - posY) * delta_dist_y;
 		}
-		//perform DDA
 		while (hit == 0)
 		{
-			//jump to next map square, OR in x-direction, OR in y-direction
-			if(sideDistX < sideDistY)
+			if(side_dist_x < side_dist_y)
 			{
-			sideDistX += deltaDistX;
-			mapX += stepX;
+			side_dist_x += delta_dist_x;
+			map_x += step_x;
 			side = 0;
 		}
 		else
 		{
-			sideDistY += deltaDistY;
-			mapY += stepY;
+			side_dist_y += delta_dist_y;
+			map_y += step_y;
 			side = 1;
 		}
-		//Check if ray has hit a wall
-		if(param.map[mapX][mapY] != '0') hit = 1;
+		if(param.map[map_x][map_y] != '0') hit = 1;
 		}
-		//Calculate distance projected on camera direction (Euclidean distance will give fisheye effect!)
 		if (side == 0)
-			perpWallDist = (mapX - posX + (1 - stepX) / 2) / rayDirX;
+			perp_wall_dist = (map_x - posX + (1 - step_x) / 2) / ray_dir_x;
 		else
-			perpWallDist = (mapY - posY + (1 - stepY) / 2) / rayDirY;
-
-		//Calculate height of line to draw on screen
-		int lineHeight = (int)(param.res_y / perpWallDist);
-
-		//calculate lowest and highest pixel to fill in current stripe
-		int drawStart = -lineHeight / 2 + param.res_y / 2;
-		if(drawStart < 0)drawStart = 0;
-		int drawEnd = lineHeight / 2 + param.res_y / 2;
-		if(drawEnd >= param.res_y)drawEnd = param.res_y - 1;
-
-		//choose wall color
-		int color;
-		switch(param.map[mapX][mapY])
+			perp_wall_dist = (map_y - posY + (1 - step_y) / 2) / ray_dir_y;
+		line_height = (int)(param.res_y / perp_wall_dist);
+		draw_start = -line_height / 2 + param.res_y / 2;
+		if(draw_start < 0)draw_start = 0;
+			draw_end = line_height / 2 + param.res_y / 2;
+		if(draw_end >= param.res_y)
+			draw_end = param.res_y - 1;
+		switch(param.map[map_x][map_y])
 		{
 			case '1':  color = 16711680;    break; //red
 			case '2':  color = 65280;  break; //green
@@ -178,12 +165,8 @@ void raycasting()
 			case '4':  color = 16777215;  break; //white
 			default: color = 16776960; break; //yellow
 		}
-
-		//give x and y sides different brightness
 		if(side == 1) {color = color / 2;}
-
-		//draw the pixels of the stripe as a vertical line
-		draw_ver_line(x, drawStart, drawEnd, color);
+		draw_ver_line(x, draw_start, draw_end, color);
 	}
 }
 
@@ -240,6 +223,7 @@ int main()
 	dis.win = mlx_new_window(dis.mlx, param.res_x, param.res_y, "Cub3D");
 	game.img.img = mlx_new_image(dis.mlx, param.res_x, param.res_y);
 	game.img.addr = mlx_get_data_addr(game.img.img, &game.img.bits_per_pixel, &game.img.line_length, &game.img.endian);
+	draw_ceil_floor(param.res_x, param.res_y);
 	raycasting();
 	mlx_put_image_to_window(dis.mlx, dis.win, game.img.img, 0, 0);
 	mlx_hook(dis.win, 2, 1L<<0, manage_key, &dis);

@@ -75,6 +75,7 @@ static int		valid_c(char **map, int *i, t_param *param)
 		param->pos_y = i[1];
 		direction(map[i[0]][i[1]], param);
 		i[2] = 1;
+		map[i[0]][i[1]] = '0';
 	}
 	if (!(map[i[0]][(i[1]) + 1]) ||
 		(ft_isin(map[i[0]][(i[1]) + 1], "012NESW") < 0))
