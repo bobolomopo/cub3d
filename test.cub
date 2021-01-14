@@ -1,11 +1,11 @@
-EA ./asdasdas
-NO ./asdasdas
-WE >?sadddw
-S ./qwqwqqqqqq
-SO ./assssssss
+EA ./textures/redbrick.xpm
+NO ./textures/greystone.xpm
+WE ./textures/mossy.xpm
+S ./textures/barrel.xpm
+SO ./textures/wood.xpm
 F 123, 123 ,123
 C 74, 2, 86
-R 1024 860
+R 1024 760
 
 
 

@@ -12,7 +12,7 @@
 
 #include "include/cub3D.h"
 
-void	ft_define_map(t_param *param)
+/*void	ft_define_map(t_param *param)
 {
 	int     i;
 	int     j;
@@ -51,23 +51,24 @@ int		initialize(t_param *param)
 		return (-1);
 	ft_define_map(param);
 	return (1);
-}
+}*/
 
 int main()
 {
+	dis.mlx = mlx_init();
 	if (initialize(&param) < 0)
         return (-1);
 	posX = param.pos_x;
 	posY = param.pos_y;
 	dirX = param.dir_x;
 	dirY = param.dir_y;
-	dis.mlx = mlx_init();
 	dis.win = mlx_new_window(dis.mlx, param.res_x, param.res_y, "Cub3D");
 	game.img.img = mlx_new_image(dis.mlx, param.res_x, param.res_y);
 	game.img.addr = mlx_get_data_addr(game.img.img, &game.img.bits_per_pixel, &game.img.line_length, &game.img.endian);
 	draw_ceil_floor(param.res_x, param.res_y);
 	raycasting();
 	mlx_put_image_to_window(dis.mlx, dis.win, game.img.img, 0, 0);
+	//mlx_put_image_to_window(dis.mlx, dis.win, textures[0].img, 0, 0);
 	mlx_hook(dis.win, 2, 1L<<0, manage_key, &dis);
     mlx_loop(dis.mlx);
 	return (0);

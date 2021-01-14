@@ -52,7 +52,6 @@ static int		fill_map(char **map, t_param *param)
 		ft_strcpy(param->map[y], map[y]);
 		y++;
 	}
-	param->map[y] = NULL;
 	while (y-- > 0)
 		free(map[y]);
 	return (1);

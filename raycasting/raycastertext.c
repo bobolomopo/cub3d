@@ -69,6 +69,16 @@ static void	raycasting_dda()
 	}
 }
 
+static int		get_tex_color(t_img *tex, int x, int y)
+{
+	char	*dst;
+	int		color;
+
+	dst = tex->addr + (y * tex->line_length + x * (tex->bits_per_pixel / 8));
+	color = (*(unsigned int*)dst);
+	return (color);
+}
+
 void raycasting()
 {
 	int		color;
@@ -90,15 +100,38 @@ void raycasting()
 			draw_end = line_height / 2 + param.res_y / 2;
 		if(draw_end >= param.res_y)
 			draw_end = param.res_y - 1;
-		switch(param.map[map_x][map_y])
+		  //texturing calculations
+		int texNum = (param.map[map_x][map_y] - 48) - 1; //1 subtracted from it so that texture 0 can be used!
+		//calculate value of wallX
+		double wallX; //where exactly the wall was hit
+		if(side == 0)
+			wallX = posY + perp_wall_dist * ray_dir_y;
+		else
+			wallX = posX + perp_wall_dist * ray_dir_x;
+		wallX -= floor((wallX));
+
+		//x coordinate on the texture
+		int texX = (int)(wallX * (double)(textures[texNum].width));
+		if(side == 0 && ray_dir_x > 0)
+			texX = textures[texNum].width - texX - 1;
+		if(side == 1 && ray_dir_y < 0)
+			texX = textures[texNum].width - texX - 1;
+
+		// TODO: an integer-only bresenham or DDA like algorithm could make the texture coordinate stepping faster
+		// How much to increase the texture coordinate per screen pixel
+		double step = 1.0 * textures[texNum].height / line_height;
+		// Starting texture coordinate
+		double texPos = (draw_start - param.res_y / 2 + line_height / 2) * step;
+		for(int y = draw_start; y < draw_end; y++)
 		{
-			case '1':  color = 16711680;    break; //red
-			case '2':  color = 65280;  break; //green
-			case '3':  color = 255;   break; //blue
-			case '4':  color = 16777215;  break; //white
-			default: color = 16776960; break; //yellow
+			// Cast the texture coordinate to integer, and mask with (texHeight - 1) in case of overflow
+			int texY = (int)texPos & (textures[texNum].height - 1);
+			texPos += step;
+			color = get_tex_color(&textures[texNum], texX, texY);
+			//make color darker for y-sides: R, G and B byte each divided through two with a "shift" and an "and"
+			if(side == 1)
+				color = (color >> 1) & 8355711;
+			my_mlx_pixel_put(&game.img, x, y, color);
 		}
-		if(side == 1) {color = color / 2;}
-		draw_ver_line(x, draw_start, draw_end, color);
 	}
 }
