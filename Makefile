@@ -23,7 +23,7 @@ OBJ = $(SRC:.c=.o)
 all: $(NAME)
 
 $(NAME):
-	$(CC) $(SRC) -lmlx -lmlx -framework OpenGL -framework AppKit -o $(NAME)
+	$(CC) $(SRC) -g -fsanitize=address -lmlx -lmlx -framework OpenGL -framework AppKit -o $(NAME)
 
 %.o: %.c
 	$(CC) -Wall -Wextra -Werror -Imlx -c $< -o $@

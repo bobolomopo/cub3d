@@ -54,9 +54,9 @@ static void	raycasting_dda()
 	{
 		if(side_dist_x < side_dist_y)
 		{
-		side_dist_x += delta_dist_x;
-		map_x += step_x;
-		side = 0;
+			side_dist_x += delta_dist_x;
+			map_x += step_x;
+			side = 0;
 		}
 		else
 		{
@@ -64,7 +64,7 @@ static void	raycasting_dda()
 			map_y += step_y;
 			side = 1;
 		}
-		if (param.map[map_x][map_y] != '0')
+		if (param.map[map_x][map_y] == '1')
 			hit = 1;
 	}
 }
@@ -83,6 +83,7 @@ void raycasting()
 {
 	int		color;
 	int		x;
+	int		texNum;
 
 	x = 0;
 	while (x++ < param.res_x)
@@ -100,35 +101,38 @@ void raycasting()
 			draw_end = line_height / 2 + param.res_y / 2;
 		if(draw_end >= param.res_y)
 			draw_end = param.res_y - 1;
-		  //texturing calculations
-		int texNum = (param.map[map_x][map_y] - 48) - 1; //1 subtracted from it so that texture 0 can be used!
-		//calculate value of wallX
-		double wallX; //where exactly the wall was hit
+		else if (side == 0)
+		{
+			if (ray_dir_x < 0)
+				texNum = 1;
+			else
+				texNum = 0;
+		}
+		else
+		{
+			if (ray_dir_y < 0)
+				texNum = 3;
+			else
+				texNum = 2;
+		}
+		double wallX;
 		if(side == 0)
 			wallX = posY + perp_wall_dist * ray_dir_y;
 		else
 			wallX = posX + perp_wall_dist * ray_dir_x;
 		wallX -= floor((wallX));
-
-		//x coordinate on the texture
 		int texX = (int)(wallX * (double)(textures[texNum].width));
 		if(side == 0 && ray_dir_x > 0)
 			texX = textures[texNum].width - texX - 1;
 		if(side == 1 && ray_dir_y < 0)
 			texX = textures[texNum].width - texX - 1;
-
-		// TODO: an integer-only bresenham or DDA like algorithm could make the texture coordinate stepping faster
-		// How much to increase the texture coordinate per screen pixel
 		double step = 1.0 * textures[texNum].height / line_height;
-		// Starting texture coordinate
 		double texPos = (draw_start - param.res_y / 2 + line_height / 2) * step;
 		for(int y = draw_start; y < draw_end; y++)
 		{
-			// Cast the texture coordinate to integer, and mask with (texHeight - 1) in case of overflow
 			int texY = (int)texPos & (textures[texNum].height - 1);
 			texPos += step;
 			color = get_tex_color(&textures[texNum], texX, texY);
-			//make color darker for y-sides: R, G and B byte each divided through two with a "shift" and an "and"
 			if(side == 1)
 				color = (color >> 1) & 8355711;
 			my_mlx_pixel_put(&game.img, x, y, color);
