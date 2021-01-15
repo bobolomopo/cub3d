@@ -122,9 +122,9 @@ void sortsprite(int *spriteOrder, double *spriteDistance, int numsprite)
 	}
 	i = 0;
 	j = 0;
-	temp = temp2[0];
 	while (i < numsprite)
 	{
+		temp = temp2[i];
 		j = 0;
 		while (j < numsprite)
 		{
@@ -212,7 +212,8 @@ void	raycasting()
 		spriteOrder[i] = i;
 		spriteDistance[i] = ((posX - sprite[i].x) * (posX - sprite[i].x) + (posY - sprite[i].y) * (posY - sprite[i].y)); //sqrt not taken, unneeded
 	}
-	sortsprite(spriteOrder, spriteDistance, param.num_sprite);
+	if (param.num_sprite > 0)
+		sortsprite(spriteOrder, spriteDistance, param.num_sprite);
 	for(int i = 0; i < param.num_sprite; i++)
 	{
 		printf("sprite order n %d : %d\n", i, spriteOrder[i]);
