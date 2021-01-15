@@ -51,7 +51,10 @@ static int		fill_map(char **map, t_param *param)
 			return (-1);
 		ft_strcpy(param->map[y], map[y]);
 		y++;
+		if (y > param->map_h)
+			param->map_h = y;
 	}
+	param->map_w = y;
 	while (y-- > 0)
 		free(map[y]);
 	return (1);
@@ -76,6 +79,8 @@ static int		valid_c(char **map, int *i, t_param *param)
 		i[2] = 1;
 		map[i[0]][i[1]] = '0';
 	}
+	if (map[i[0]][i[1]] == '2')
+		param->numsprite += 1;
 	if (!(map[i[0]][(i[1]) + 1]) ||
 		(ft_isin(map[i[0]][(i[1]) + 1], "012NESW") < 0))
 		return (-1);

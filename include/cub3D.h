@@ -48,6 +48,7 @@ typedef	struct		s_param 	{
 	int		floor_color;
 	int		ceiling_color;
 	char	**map;
+	int		numsprite;
 	int		map_w;
 	int		map_h;
 	double	pos_x;
@@ -103,6 +104,13 @@ typedef struct		s_game		{
 	t_img	img;
 }					t_game;
 
+
+typedef struct		s_sprite	{
+	double	x;
+	double	y;
+	int		texture;
+}					t_sprite;
+
 /*
 **structure contenant la résolution de l'écran, devras faire une 
 **vérification d'erreur pour pouvoir la séparer en parts éégales.
@@ -119,7 +127,7 @@ t_display	dis;
 t_game		game;
 t_param		param;
 t_img		textures[5];
-
+t_sprite	sprites;
 int			fd;
 double		posX;
 double		posY;

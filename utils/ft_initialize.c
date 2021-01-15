@@ -47,6 +47,7 @@ static void	all_to_zero()
 	param.ceiling_color = -1;
 	param.text_sprite = NULL;
 	param.map = NULL;
+	param.numsprite = 0;
 	param.pos_x = 0;
 	param.pos_y = 0;
 	param.dir_x = 0;

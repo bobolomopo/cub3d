@@ -60,8 +60,13 @@ int main()
         return (-1);
 	posX = param.pos_x;
 	posY = param.pos_y;
+	if (posX == 1)
+		posX += 0.5;
+	if (posY == 1)
+		posY += 0.5;
 	dirX = param.dir_x;
 	dirY = param.dir_y;
+	int i = 0;
 	dis.win = mlx_new_window(dis.mlx, param.res_x, param.res_y, "Cub3D");
 	game.img.img = mlx_new_image(dis.mlx, param.res_x, param.res_y);
 	game.img.addr = mlx_get_data_addr(game.img.img, &game.img.bits_per_pixel, &game.img.line_length, &game.img.endian);

@@ -2,7 +2,7 @@
 
 int		manage_key(int keycode)
 {
-	double moveSpeed = 1.0;
+	double moveSpeed = 0.8;
 	double rotSpeed = 0.1;
 	if(keycode == 126)
 	{

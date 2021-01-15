@@ -51,7 +51,7 @@ static void raycasting_init2(int x)
 static void	raycasting_dda()
 {
 	while (hit == 0)
-	{
+	{	
 		if(side_dist_x < side_dist_y)
 		{
 			side_dist_x += delta_dist_x;
@@ -71,8 +71,8 @@ static void	raycasting_dda()
 
 static int		get_tex_color(t_img *tex, int x, int y)
 {
-	char	*dst;
-	int		color;
+	char				*dst;
+	unsigned int		color;
 
 	dst = tex->addr + (y * tex->line_length + x * (tex->bits_per_pixel / 8));
 	color = (*(unsigned int*)dst);
@@ -84,9 +84,10 @@ void raycasting()
 	int		color;
 	int		x;
 	int		texNum;
+	unsigned int buffer[param.res_y];
 
 	x = 0;
-	while (x++ < param.res_x)
+	while (x < param.res_x)
 	{
 		raycasting_init(x);
 		raycasting_init2(x);
@@ -97,11 +98,12 @@ void raycasting()
 			perp_wall_dist = (map_y - posY + (1 - step_y) / 2) / ray_dir_y;
 		line_height = (int)(param.res_y / perp_wall_dist);
 		draw_start = -line_height / 2 + param.res_y / 2;
-		if(draw_start < 0)draw_start = 0;
-			draw_end = line_height / 2 + param.res_y / 2;
+		if (draw_start < 0)
+			draw_start = 0;
+		draw_end = line_height / 2 + param.res_y / 2;
 		if(draw_end >= param.res_y)
 			draw_end = param.res_y - 1;
-		else if (side == 0)
+		if (side == 0)
 		{
 			if (ray_dir_x < 0)
 				texNum = 1;
@@ -137,5 +139,6 @@ void raycasting()
 				color = (color >> 1) & 8355711;
 			my_mlx_pixel_put(&game.img, x, y, color);
 		}
+		x++;
 	}
 }
