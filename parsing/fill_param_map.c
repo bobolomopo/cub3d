@@ -80,7 +80,7 @@ static int		valid_c(char **map, int *i, t_param *param)
 		map[i[0]][i[1]] = '0';
 	}
 	if (map[i[0]][i[1]] == '2')
-		param->numsprite += 1;
+		param->num_sprite += 1;
 	if (!(map[i[0]][(i[1]) + 1]) ||
 		(ft_isin(map[i[0]][(i[1]) + 1], "012NESW") < 0))
 		return (-1);

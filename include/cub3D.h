@@ -48,7 +48,7 @@ typedef	struct		s_param 	{
 	int		floor_color;
 	int		ceiling_color;
 	char	**map;
-	int		numsprite;
+	int		num_sprite;
 	int		map_w;
 	int		map_h;
 	double	pos_x;
@@ -108,7 +108,7 @@ typedef struct		s_game		{
 typedef struct		s_sprite	{
 	double	x;
 	double	y;
-	int		texture;
+	t_img	text;
 }					t_sprite;
 
 /*
