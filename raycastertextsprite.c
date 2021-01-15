@@ -116,7 +116,6 @@ void sortsprite(int *spriteOrder, double *spriteDistance, int numsprite)
 	i = 0;
 	while (i < numsprite)
 	{
-		printf("%f\n", spriteDistance[i]);
 		temp2[i] = spriteDistance[i];
 		i++;
 	}
@@ -216,66 +215,39 @@ void	raycasting()
 		sortsprite(spriteOrder, spriteDistance, param.num_sprite);
 	for(int i = 0; i < param.num_sprite; i++)
 	{
-		printf("sprite order n %d : %d\n", i, spriteOrder[i]);
-		//translate sprite position to relative to camera
 		double spriteX = sprite[spriteOrder[i]].x - posX;
 		double spriteY = sprite[spriteOrder[i]].y - posY;
-
-		//transform sprite with the inverse camera matrix
-		// [ planeX   dirX ] -1                                       [ dirY      -dirX ]
-		// [               ]       =  1/(planeX*dirY-dirX*planeY) *   [                 ]
-		// [ planeY   dirY ]                                          [ -planeY  planeX ]
-
-		double invDet = 1.0 / (planeX * dirY - dirX * plane_y); //required for correct matrix multiplication
-
+		double invDet = 1.0 / (planeX * dirY - dirX * plane_y);
 		double transformX = invDet * (dirY * spriteX - dirX * spriteY);
-		double transformY = invDet * (-plane_y * spriteX + planeX * spriteY); //this is actually the depth inside the screen, that what Z is in 3D, the distance of sprite to player, matching sqrt(spriteDistance[i])
-
+		double transformY = invDet * (-plane_y * spriteX + planeX * spriteY);
 		int spriteScreenX = (int)((param.res_x / 2) * (1 + transformX / transformY));
-
-		//parameters for scaling and moving the sprites
-		#define uDiv 1
-		#define vDiv 1
-		#define vMove 0.0
-		int vMoveScreen = (int)(vMove / transformY);
-
-		//calculate height of the sprite on screen
-		int spriteHeight = abs((int)(param.res_y / (transformY))) / vDiv; //using "transformY" instead of the real distance prevents fisheye
-		//calculate lowest and highest pixel to fill in current stripe
-		int drawStartY = -spriteHeight / 2 + param.res_y / 2 + vMoveScreen;
+		int spriteHeight = abs((int)(param.res_y / (transformY)));
+		int drawStartY = -spriteHeight / 2 + param.res_y / 2;
 		if(drawStartY < 0)
 			drawStartY = 0;
-		int drawEndY = spriteHeight / 2 + param.res_y / 2 + vMoveScreen;
+		int drawEndY = spriteHeight / 2 + param.res_y / 2;
 		if(drawEndY >= param.res_y)
 			drawEndY = param.res_y - 1;
-		int spriteWidth = abs((int)(param.res_y / (transformY))) / uDiv;
+		int spriteWidth = abs((int)(param.res_y / (transformY)));
 		int drawStartX = -spriteWidth / 2 + spriteScreenX;
 		if(drawStartX < 0)
 			drawStartX = 0;
 		int drawEndX = spriteWidth / 2 + spriteScreenX;
 		if(drawEndX >= param.res_x)
 			drawEndX = param.res_x - 1;
-		printf("start : %d\nend : %d\n", drawStartX, drawEndX);
+		printf("Y:(%d, %d)\nX:(%d, %d)\n", drawStartY, drawEndY, drawStartX, drawEndX);
 		for(int stripe = drawStartX; stripe < drawEndX; stripe++)
 		{
-						printf("ok\n");
 			int texX = (int)(256 * (stripe - (-spriteWidth / 2 + spriteScreenX)) * textures[4].width / spriteWidth) / 256;
-			//the conditions in the if are:
-			//1) it's in front of camera plane so you don't see things behind you
-			//2) it's on the screen (left)
-			//3) it's on the screen (right)
-			//4) ZBuffer, with perpendicular distance
 			if (transformY > 0 && stripe > 0 && stripe < param.res_x && transformY < z_buffer[stripe])
 			{
-				for(int y = drawStartY; y < drawEndY; y++) //for every pixel of the current stripe
+				for(int y = drawStartY; y < drawEndY; y++)
 				{
-					int d = (y-vMoveScreen) * 256 - param.res_y * 128 + spriteHeight * 128; //256 and 128 factors to avoid floats
+					int d = y * 256 - param.res_y * 128 + spriteHeight * 128;
 					int texY = ((d * textures[4].height) / spriteHeight) / 256;
 					color = get_tex_color(&textures[4], texX, texY);
-					printf("ok\n");
-					if(color != 0)
+					if (color != 0)
 						my_mlx_pixel_put(&game.img, x, y, color);
-				 //paint pixel if it isn't black, black is the invisible color
 				}
 			}
 		}
