@@ -73,8 +73,8 @@ static int		valid_c(char **map, int *i, t_param *param)
 	{
 		if (i[2] == 1)
 			return (-1);
-		param->pos_x = i[0];
-		param->pos_y = i[1];
+		param->pos_x = i[0] + 0.5;
+		param->pos_y = i[1] + 0.5;
 		direction(map[i[0]][i[1]], param);
 		i[2] = 1;
 		map[i[0]][i[1]] = '0';

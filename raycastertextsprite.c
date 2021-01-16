@@ -94,8 +94,8 @@ void	sprite_value(t_sprite *sprite)
 		{
 			if (param.map[x][y] == '2')
 			{
-				sprite[i].x = y;
-				sprite[i].y = x;
+				sprite[i].x = x + 0.5;
+				sprite[i].y = y + 0.5;
 				sprite[i].text = textures[4];
 				i++;
 			}
@@ -209,7 +209,7 @@ void	raycasting()
 	for(int i = 0; i < param.num_sprite; i++)
 	{
 		spriteOrder[i] = i;
-		spriteDistance[i] = ((posX - sprite[i].x) * (posX - sprite[i].x) + (posY - sprite[i].y) * (posY - sprite[i].y)); //sqrt not taken, unneeded
+		spriteDistance[i] = sqrt(((posX - sprite[i].x) * (posX - sprite[i].x) + (posY - sprite[i].y) * (posY - sprite[i].y))); //sqrt not taken, unneeded
 	}
 	if (param.num_sprite > 0)
 		sortsprite(spriteOrder, spriteDistance, param.num_sprite);
@@ -219,9 +219,9 @@ void	raycasting()
 		double spriteY = sprite[spriteOrder[i]].y - posY;
 		double invDet = 1.0 / (planeX * dirY - dirX * plane_y);
 		double transformX = invDet * (dirY * spriteX - dirX * spriteY);
-		double transformY = invDet * (-plane_y * spriteX + planeX * spriteY);
-		int spriteScreenX = (int)((param.res_x / 2) * (1 + transformX / transformY));
-		int spriteHeight = abs((int)(param.res_y / (transformY)));
+		double transformY = invDet * (planeX * spriteY -plane_y * spriteX);
+		int spriteScreenX = (int)((param.res_x / 2) * (1 + (transformX / transformY)));
+		int spriteHeight = abs((int)((param.res_y / (transformY))));
 		int drawStartY = -spriteHeight / 2 + param.res_y / 2;
 		if(drawStartY < 0)
 			drawStartY = 0;
@@ -235,7 +235,6 @@ void	raycasting()
 		int drawEndX = spriteWidth / 2 + spriteScreenX;
 		if(drawEndX >= param.res_x)
 			drawEndX = param.res_x - 1;
-		printf("Y:(%d, %d)\nX:(%d, %d)\n", drawStartY, drawEndY, drawStartX, drawEndX);
 		for(int stripe = drawStartX; stripe < drawEndX; stripe++)
 		{
 			int texX = (int)(256 * (stripe - (-spriteWidth / 2 + spriteScreenX)) * textures[4].width / spriteWidth) / 256;
@@ -247,7 +246,7 @@ void	raycasting()
 					int texY = ((d * textures[4].height) / spriteHeight) / 256;
 					color = get_tex_color(&textures[4], texX, texY);
 					if (color != 0)
-						my_mlx_pixel_put(&game.img, x, y, color);
+						my_mlx_pixel_put(&game.img, stripe, y, color);
 				}
 			}
 		}

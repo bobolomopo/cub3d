@@ -4,7 +4,7 @@ int		manage_key(int keycode)
 {
 	double moveSpeed = 0.8;
 	double rotSpeed = 0.1;
-	if(keycode == 126)
+	if(keycode == 13)
 	{
 		if ((param.map[(int)(posX + dirX * moveSpeed)][(int)(posY)]) == '0')
 			posX += dirX * moveSpeed;
@@ -14,12 +14,32 @@ int		manage_key(int keycode)
 		raycasting();
 		mlx_put_image_to_window(dis.mlx, dis.win, game.img.img, 0, 0);
 	}
-	if(keycode == 125)
+	if(keycode == 1)
 	{
 		if ((param.map[(int)(posX - dirX * moveSpeed)][(int)(posY)]) == '0')
 			posX -= dirX * moveSpeed;
 		if ((param.map[(int)(posX)][(int)(posY - dirY * moveSpeed)]) == '0')
 			posY -= dirY * moveSpeed;
+		draw_ceil_floor(param.res_x, param.res_y);
+		raycasting();
+		mlx_put_image_to_window(dis.mlx, dis.win, game.img.img, 0, 0);
+	}
+	if (keycode == 2)
+	{
+		if ((param.map[(int)(posX + dirY * moveSpeed)][(int)(posY)]) == '0')
+			posX += dirY * moveSpeed;
+		if ((param.map[(int)(posX)][(int)(posY - dirX * moveSpeed)]) == '0')
+			posY -= dirX * moveSpeed;
+		draw_ceil_floor(param.res_x, param.res_y);
+		raycasting();
+		mlx_put_image_to_window(dis.mlx, dis.win, game.img.img, 0, 0);
+	}
+	if (keycode == 0)
+	{
+		if ((param.map[(int)(posX - dirY * moveSpeed)][(int)(posY)]) == '0')
+			posX -= dirY * moveSpeed;
+		if ((param.map[(int)(posX)][(int)(posY + dirX * moveSpeed)]) == '0')
+			posY += dirX * moveSpeed;
 		draw_ceil_floor(param.res_x, param.res_y);
 		raycasting();
 		mlx_put_image_to_window(dis.mlx, dis.win, game.img.img, 0, 0);

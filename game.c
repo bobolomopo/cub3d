@@ -12,58 +12,13 @@
 
 #include "include/cub3D.h"
 
-/*void	ft_define_map(t_param *param)
-{
-	int     i;
-	int     j;
-
-	i = 0;
-	while (param->map[i])
-	{
-		j = 0;
-		while (param->map[i][j])
-			j++;
-		if (j > param->map_w)
-			param->map_w = j;
-		i++;
-	}
-	param->map_h = i;
-}
-
-int		initialize(t_param *param)
-{
-	fd = open("./test.cub", O_RDONLY);
-	param->res_x = 0;
-	param->res_y = 0;
-	param->text_north = NULL;
-	param->text_south = NULL;
-	param->text_east = NULL;
-	param->text_west = NULL;
-	param->floor_color = -1;
-	param->ceiling_color = -1;
-	param->text_sprite = NULL;
-	param->map = NULL;
-	param->pos_x = 0;
-	param->pos_y = 0;
-	param->dir_x = 0;
-	param->dir_y = 0;
-	if (parsing(fd, param) < 0)
-		return (-1);
-	ft_define_map(param);
-	return (1);
-}*/
-
-int main()
+int main(int argc, char **argv)
 {
 	dis.mlx = mlx_init();
 	if (initialize(&param) < 0)
         return (-1);
 	posX = param.pos_x;
 	posY = param.pos_y;
-	if (posX == 1)
-		posX += 0.5;
-	if (posY == 1)
-		posY += 0.5;
 	dirX = param.dir_x;
 	dirY = param.dir_y;
 	int i = 0;
