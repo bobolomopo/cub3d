@@ -1,22 +1,36 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_close.c                                         :+:      :+:    :+:   */
+/*   draw.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jandre <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/01/16 16:03:03 by jandre            #+#    #+#             */
-/*   Updated: 2021/01/16 16:03:05 by jandre           ###   ########.fr       */
+/*   Created: 2021/01/16 16:16:06 by jandre            #+#    #+#             */
+/*   Updated: 2021/01/16 16:16:07 by jandre           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/cub3D.h"
 
-void	ft_close(void)
+void	draw_ceil_floor(int width, int height)
 {
-	mlx_destroy_window(dis.mlx, dis.win);
-	free(dis.mlx);
-	if (fd)
-		close(fd);
-	exit(0);
+	int x;
+	int y;
+
+	x = 0;
+	while (x < width)
+	{
+		y = 0;
+		while (y < height / 2)
+		{
+			my_mlx_pixel_put(&game.img, x, y, param.ceiling_color);
+			y++;
+		}
+		while (y < height)
+		{
+			my_mlx_pixel_put(&game.img, x, y, param.floor_color);
+			y++;
+		}
+		x++;
+	}
 }

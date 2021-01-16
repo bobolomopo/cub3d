@@ -3,8 +3,8 @@ WE ./textures/greystone.xpm
 NO ./textures/mossy.xpm
 S ./textures/barrel.xpm
 SO ./textures/redbrick.xpm
-F 123, 123 ,123
-C 74, 2, 86
+F 0, 0 , 255
+C 255, 0, 0
 R 1024 760
 
 11111111111111111111111111

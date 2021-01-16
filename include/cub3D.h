@@ -21,6 +21,12 @@
 # ifndef OPEN_MAX
 #  define OPEN_MAX 256
 # endif
+# ifndef ROTSPEED
+#  define ROTSPEED 0.1
+# endif
+# ifndef MOVESPEED
+#  define MOVESPEED 0.8
+# endif
 # ifndef PI
 #  define PI 3.141592653589
 # endif
@@ -133,7 +139,7 @@ double		posX;
 double		posY;
 double		dirX;
 double		dirY;
-double		planeX;
+double		plane_x;
 double		plane_y;
 double		camera_x;
 double		ray_dir_x;
@@ -186,6 +192,7 @@ void		draw_ver_line(int x, int drawStart, int drawEnd, int color);
 void		draw_ceil_floor(int width, int height);
 void		raycasting();
 int			manage_key(int keycode);
+int			get_tex_color(t_img *tex, int x, int y);
 
 
 #endif
