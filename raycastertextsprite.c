@@ -69,66 +69,6 @@ static void	raycasting_dda()
 	}
 }
 
-void	sprite_value(t_sprite *sprite)
-{
-	int x;
-	int	y;
-	int i;
-
-	x = 0;
-	i = 0;
-	while (x < param.map_h)
-	{
-		y = 0;
-		while (param.map[x][y])
-		{
-			if (param.map[x][y] == '2')
-			{
-				sprite[i].x = x + 0.5;
-				sprite[i].y = y + 0.5;
-				sprite[i].text = textures[4];
-				i++;
-			}
-			y++;
-		}
-		x++;
-	}
-}
-
-void sortsprite(int *spriteOrder, double *spriteDistance, int numsprite)
-{
-	int		i;
-	int		j;
-	double	temp;
-	double	temp2[numsprite];
-
-
-	i = 0;
-	while (i < numsprite)
-	{
-		temp2[i] = spriteDistance[i];
-		i++;
-	}
-	i = 0;
-	j = 0;
-	while (i < numsprite)
-	{
-		temp = temp2[i];
-		j = 0;
-		while (j < numsprite)
-		{
-			if (temp < temp2[j])
-			{
-				temp = temp2[j];
-				spriteOrder[i] = j;
-			}
-			j++;
-		}
-		temp2[spriteOrder[i]] = 0;
-		i++;
-	}
-}
-
 void	raycasting()
 {
 	int			color;

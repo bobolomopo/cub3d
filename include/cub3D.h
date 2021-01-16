@@ -193,6 +193,7 @@ void		draw_ceil_floor(int width, int height);
 void		raycasting();
 int			manage_key(int keycode);
 int			get_tex_color(t_img *tex, int x, int y);
-
+void		sprite_value(t_sprite *sprite);
+void		sortsprite(int *sprite_order, double *spriteDistance, int numsprite);
 
 #endif
