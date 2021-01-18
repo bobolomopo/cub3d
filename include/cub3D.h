@@ -148,6 +148,17 @@ typedef struct		s_raycast	{
 	int					sprite_x;
 	int					sprite_y;
 	t_img				sprite_text;
+	int					tex_num;
+	double				inv_det;
+	double				transform_x;
+	double				transform_y;
+	int					sprite_screen_x;
+	int					sprite_height;
+	int					draw_start_y;
+	int					draw_end_y;
+	int					sprite_width;
+	int					draw_start_x;
+	int					draw_end_x;
 }					t_raycast;
 
 /*
