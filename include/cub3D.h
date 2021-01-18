@@ -44,33 +44,24 @@
 */
 
 typedef	struct		s_param 	{
-	int		res_x;
-	int		res_y;
-	char	*text_north;
-	char	*text_south;
-	char	*text_west;
-	char	*text_east;
-	char	*text_sprite;
-	int		floor_color;
-	int		ceiling_color;
-	char	**map;
-	int		num_sprite;
-	int		map_w;
-	int		map_h;
-	double	pos_x;
-	double	pos_y;
-	double	dir_x;
-	double	dir_y;
+	int					res_x;
+	int					res_y;
+	char				*text_north;
+	char				*text_south;
+	char				*text_west;
+	char				*text_east;
+	char				*text_sprite;
+	int					floor_color;
+	int					ceiling_color;
+	char				**map;
+	int					num_sprite;
+	int					map_w;
+	int					map_h;
+	double				pos_x;
+	double				pos_y;
+	double				dir_x;
+	double				dir_y;
 }					t_param;
-
-/*
-**structure pour le plan devant le perso
-*/
-
-typedef struct		s_cam 		{
-	double	x;
-	double	y;
-}					t_cam;
 
 /*
 **simple structure avec tout ce qui est nécessaire pour définir une
@@ -78,13 +69,13 @@ typedef struct		s_cam 		{
 */
 
 typedef struct		s_img		{
-	void	*img;
-	char	*addr;
-	int		bits_per_pixel;
-	int		line_length;
-	int		endian;
-	int		width;
-	int		height;
+	void				*img;
+	char				*addr;
+	int					bits_per_pixel;
+	int					line_length;
+	int					endian;
+	int					width;
+	int					height;
 }					t_img;
 
 /*
@@ -93,8 +84,8 @@ typedef struct		s_img		{
 */
 
 typedef struct		s_display	{
-	void	*mlx;
-	void	*win;
+	void				*mlx;
+	void				*win;
 }					t_display;
 
 /*
@@ -104,18 +95,60 @@ typedef struct		s_display	{
 */
 
 typedef struct		s_game		{
-	int		pos_x;
-	int		pos_y;
+	int					pos_x;
+	int					pos_y;
 	float	angle;
-	t_img	img;
+	t_img				img;
 }					t_game;
 
 
 typedef struct		s_sprite	{
-	double	x;
-	double	y;
-	t_img	text;
+	double				x;
+	double				y;
+	t_img				text;
 }					t_sprite;
+
+typedef struct		s_bmp
+{
+	int					bmp_size;
+	int					bytes_width;
+	int					pad_size;
+	int					fd;
+	unsigned char		*fileheader;
+	unsigned char		*imageheader;
+	int					i;
+	int					j;
+	int					r;
+	int					g;
+	int					b;
+}					t_bmp;
+
+typedef struct		s_raycast	{
+	double				pos_x;
+	double				pos_y;
+	double				dir_x;
+	double				dir_y;
+	double				plane_x;
+	double				plane_y;
+	double				camera_x;
+	double				ray_dir_x;
+	double				ray_dir_y;
+	double				side_dist_x;
+	double				side_dist_y;
+	double				delta_dist_x;
+	double				delta_dist_y;
+	double				perp_wall_dist;
+	int					step_x;
+	int					step_y;
+	int					hit;
+	int					side;
+	int					line_height;
+	int					draw_start;
+	int					draw_end;
+	int					sprite_x;
+	int					sprite_y;
+	t_img				sprite_text;
+}					t_raycast;
 
 /*
 **structure contenant la résolution de l'écran, devras faire une 
@@ -195,5 +228,11 @@ int			manage_key(int keycode);
 int			get_tex_color(t_img *tex, int x, int y);
 void		sprite_value(t_sprite *sprite);
 void		sortsprite(int *sprite_order, double *spriteDistance, int numsprite);
+void		create_image();
+void		*ft_calloc(size_t count, size_t size);
+void		ft_bzero(void *s, unsigned int n);
+void		*ft_memset(void *b, int c, unsigned int len);
+int			parsing_error(char *ptr, int ret);
+int			ft_strcmp(const char *s1, const char *s2);
 
 #endif

@@ -63,6 +63,5 @@ void		sortsprite(int *sprite_order, double *sprite_distance,
 			}
 		}
 		temp2[sprite_order[i]] = 0;
-		i++;
 	}
 }

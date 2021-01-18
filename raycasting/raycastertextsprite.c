@@ -15,7 +15,7 @@
 static void raycasting_init(int x)
 {
 	camera_x = 2 * x / (double)param.res_x - 1;
-	ray_dir_x = dirX + planeX * camera_x;
+	ray_dir_x = dirX + plane_x * camera_x;
 	ray_dir_y = dirY + plane_y * camera_x;
 	map_x = (int)(posX);
 	map_y = (int)(posY);
@@ -69,24 +69,18 @@ static void	raycasting_dda()
 	}
 }
 
-static int		get_tex_color(t_img *tex, int x, int y)
+void	raycasting()
 {
-	char				*dst;
-	unsigned int		color;
-
-	dst = tex->addr + (y * tex->line_length + x * (tex->bits_per_pixel / 8));
-	color = (*(unsigned int*)dst);
-	return (color);
-}
-
-void raycasting()
-{
-	int		color;
-	int		x;
-	int		texNum;
-	unsigned int buffer[param.res_y];
+	int			color;
+	int			x;
+	int			tex_num;
+	double		z_buffer[param.res_x];
+	int			spriteOrder[param.num_sprite];
+	double		spriteDistance[param.num_sprite];
+	t_sprite	sprite[param.num_sprite];
 
 	x = 0;
+	sprite_value(sprite);
 	while (x < param.res_x)
 	{
 		raycasting_init(x);
@@ -106,16 +100,16 @@ void raycasting()
 		if (side == 0)
 		{
 			if (ray_dir_x < 0)
-				texNum = 1;
+				tex_num = 1;
 			else
-				texNum = 0;
+				tex_num = 0;
 		}
 		else
 		{
 			if (ray_dir_y < 0)
-				texNum = 3;
+				tex_num = 3;
 			else
-				texNum = 2;
+				tex_num = 2;
 		}
 		double wallX;
 		if(side == 0)
@@ -123,22 +117,68 @@ void raycasting()
 		else
 			wallX = posX + perp_wall_dist * ray_dir_x;
 		wallX -= floor((wallX));
-		int texX = (int)(wallX * (double)(textures[texNum].width));
+		int texX = (int)(wallX * (double)(textures[tex_num].width));
 		if(side == 0 && ray_dir_x > 0)
-			texX = textures[texNum].width - texX - 1;
+			texX = textures[tex_num].width - texX - 1;
 		if(side == 1 && ray_dir_y < 0)
-			texX = textures[texNum].width - texX - 1;
-		double step = 1.0 * textures[texNum].height / line_height;
+			texX = textures[tex_num].width - texX - 1;
+		double step = 1.0 * textures[tex_num].height / line_height;
 		double texPos = (draw_start - param.res_y / 2 + line_height / 2) * step;
 		for(int y = draw_start; y < draw_end; y++)
 		{
-			int texY = (int)texPos & (textures[texNum].height - 1);
+			int texY = (int)texPos & (textures[tex_num].height - 1);
 			texPos += step;
-			color = get_tex_color(&textures[texNum], texX, texY);
+			color = get_tex_color(&textures[tex_num], texX, texY);
 			if(side == 1)
 				color = (color >> 1) & 8355711;
 			my_mlx_pixel_put(&game.img, x, y, color);
 		}
+		z_buffer[x] = perp_wall_dist;
 		x++;
+	}
+	for(int i = 0; i < param.num_sprite; i++)
+	{
+		spriteOrder[i] = i;
+		spriteDistance[i] = sqrt(((posX - sprite[i].x) * (posX - sprite[i].x) + (posY - sprite[i].y) * (posY - sprite[i].y)));
+	}
+	if (param.num_sprite > 0)
+		sortsprite(spriteOrder, spriteDistance, param.num_sprite);
+	for(int i = 0; i < param.num_sprite; i++)
+	{
+		double spriteX = sprite[spriteOrder[i]].x - posX;
+		double spriteY = sprite[spriteOrder[i]].y - posY;
+		double invDet = 1.0 / (plane_x * dirY - dirX * plane_y);
+		double transformX = invDet * (dirY * spriteX - dirX * spriteY);
+		double transformY = invDet * (plane_x * spriteY -plane_y * spriteX);
+		int spriteScreenX = (int)((param.res_x / 2) * (1 + (transformX / transformY)));
+		int spriteHeight = abs((int)((param.res_y / (transformY))));
+		int drawStartY = -spriteHeight / 2 + param.res_y / 2;
+		if(drawStartY < 0)
+			drawStartY = 0;
+		int drawEndY = spriteHeight / 2 + param.res_y / 2;
+		if(drawEndY >= param.res_y)
+			drawEndY = param.res_y - 1;
+		int spriteWidth = abs((int)(param.res_y / (transformY)));
+		int drawStartX = -spriteWidth / 2 + spriteScreenX;
+		if(drawStartX < 0)
+			drawStartX = 0;
+		int drawEndX = spriteWidth / 2 + spriteScreenX;
+		if(drawEndX >= param.res_x)
+			drawEndX = param.res_x - 1;
+		for(int stripe = drawStartX; stripe < drawEndX; stripe++)
+		{
+			int texX = (int)(256 * (stripe - (-spriteWidth / 2 + spriteScreenX)) * textures[4].width / spriteWidth) / 256;
+			if (transformY > 0 && stripe > 0 && stripe < param.res_x && transformY < z_buffer[stripe])
+			{
+				for(int y = drawStartY; y < drawEndY; y++)
+				{
+					int d = y * 256 - param.res_y * 128 + spriteHeight * 128;
+					int texY = ((d * textures[4].height) / spriteHeight) / 256;
+					color = get_tex_color(&textures[4], texX, texY);
+					if (color != 0)
+						my_mlx_pixel_put(&game.img, stripe, y, color);
+				}
+			}
+		}
 	}
 }
