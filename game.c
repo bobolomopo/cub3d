@@ -19,7 +19,6 @@ int main(int argc, char **argv)
 		if (argc > 2 || ft_strcmp(argv[1], "--save") != 0)
 			return (0);
 	}
-	printf("%s", argv[1]);
 	dis.mlx = mlx_init();
 	if (initialize(&param) < 0)
         return (-1);
