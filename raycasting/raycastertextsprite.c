@@ -127,41 +127,41 @@ static void		raycasting_drawing(int x)
 
 void raycasting_sprite_init(t_sprite *sprite, int *spriteOrder, int i)
 {
-	sprite_x = sprite[spriteOrder[i]].x - g_param.pos_x;
-	sprite_y = sprite[spriteOrder[i]].y - g_param.pos_y;
-	inv_det = 1.0 / (g_param.plane_x * g_param.dir_y - g_param.dir_x * g_param.plane_y);
-	transform_x = inv_det * (g_param.dir_y * sprite_x - g_param.dir_x * sprite_y);
-	transform_y = inv_det * (g_param.plane_x * sprite_y -g_param.plane_y * sprite_x);
-	sprite_screen_x = (int)((g_param.res_x / 2) * (1 + (transform_x / transform_y)));
-	sprite_height = abs((int)((g_param.res_y / (transform_y))));
-	draw_start_y = -sprite_height / 2 + g_param.res_y / 2;
-	if(draw_start_y < 0)
-		draw_start_y = 0;
-	draw_end_y = sprite_height / 2 + g_param.res_y / 2;
-	if(draw_end_y >= g_param.res_y)
-		draw_end_y = g_param.res_y - 1;
-	sprite_width = abs((int)(g_param.res_y / (transform_y)));
-	draw_start_x = -sprite_width / 2 + sprite_screen_x;
-	if(draw_start_x < 0)
-		draw_start_x = 0;
-	draw_end_x = sprite_width / 2 + sprite_screen_x;
-	if(draw_end_x >= g_param.res_x)
-		draw_end_x = g_param.res_x - 1;
+	g_param.sprite_x = sprite[spriteOrder[i]].x - g_param.pos_x;
+	g_param.sprite_y = sprite[spriteOrder[i]].y - g_param.pos_y;
+	g_param.inv_det = 1.0 / (g_param.plane_x * g_param.dir_y - g_param.dir_x * g_param.plane_y);
+	g_param.transform_x = g_param.inv_det * (g_param.dir_y * g_param.sprite_x - g_param.dir_x * g_param.sprite_y);
+	g_param.transform_y = g_param.inv_det * (g_param.plane_x * g_param.sprite_y -g_param.plane_y * g_param.sprite_x);
+	g_param.sprite_screen_x = (int)((g_param.res_x / 2) * (1 + (g_param.transform_x / g_param.transform_y)));
+	g_param.sprite_height = abs((int)((g_param.res_y / (g_param.transform_y))));
+	g_param.draw_start_y = -g_param.sprite_height / 2 + g_param.res_y / 2;
+	if (g_param.draw_start_y < 0)
+		g_param.draw_start_y = 0;
+	g_param.draw_end_y = g_param.sprite_height / 2 + g_param.res_y / 2;
+	if (g_param.draw_end_y >= g_param.res_y)
+		g_param.draw_end_y = g_param.res_y - 1;
+	g_param.sprite_width = abs((int)(g_param.res_y / (g_param.transform_y)));
+	g_param.draw_start_x = -g_param.sprite_width / 2 + g_param.sprite_screen_x;
+	if (g_param.draw_start_x < 0)
+		g_param.draw_start_x = 0;
+	g_param.draw_end_x = g_param.sprite_width / 2 + g_param.sprite_screen_x;
+	if (g_param.draw_end_x >= g_param.res_x)
+		g_param.draw_end_x = g_param.res_x - 1;
 }
 
 void		raycasting_sprite_draw(double *z_buffer)
 {
 	int color;
 
-	for(int stripe = draw_start_x; stripe < draw_end_x; stripe++)
+	for(int stripe = g_param.draw_start_x; stripe < g_param.draw_end_x; stripe++)
 	{
-		int tex_x = (int)(256 * (stripe - (-sprite_width / 2 + sprite_screen_x)) * g_param.textures[4].width / sprite_width) / 256;
-		if (transform_y > 0 && stripe > 0 && stripe < g_param.res_x && transform_y < z_buffer[stripe])
+		int tex_x = (int)(256 * (stripe - (-g_param.sprite_width / 2 + g_param.sprite_screen_x)) * g_param.textures[4].width / g_param.sprite_width) / 256;
+		if (g_param.transform_y > 0 && stripe > 0 && stripe < g_param.res_x && g_param.transform_y < z_buffer[stripe])
 		{
-			for(int y = draw_start_y; y < draw_end_y; y++)
+			for(int y = g_param.draw_start_y; y < g_param.draw_end_y; y++)
 			{
-				int d = y * 256 - g_param.res_y * 128 + sprite_height * 128;
-				int tex_y = ((d * g_param.textures[4].height) / sprite_height) / 256;
+				int d = y * 256 - g_param.res_y * 128 + g_param.sprite_height * 128;
+				int tex_y = ((d * g_param.textures[4].height) / g_param.sprite_height) / 256;
 				color = get_tex_color(&g_param.textures[4], tex_x, tex_y);
 				if (color != 0)
 					my_mlx_pixel_put(&g_param.game, stripe, y, color);
