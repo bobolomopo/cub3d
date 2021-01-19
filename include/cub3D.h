@@ -68,6 +68,16 @@ typedef	struct		s_param 	{
 	int					num_sprite;
 	int					map_w;
 	int					map_h;
+	int					step_x;
+	int					step_y;
+	int					map_x;
+	int					map_y;
+	int					hit;
+	int					side;
+	int					line_height;
+	int					draw_start;
+	int					draw_end;
+	int					tex_num;
 	double				pos_x;
 	double				pos_y;
 	double				dir_x;
@@ -81,6 +91,7 @@ typedef	struct		s_param 	{
 	double				camera_x;
 	double				delta_dist_x;
 	double				delta_dist_y;
+	double				perp_wall_dist;
 	int					fd;
 	t_display			dis;
 	t_img				game;
@@ -148,17 +159,6 @@ typedef struct		s_bmp
 
 t_param		g_param;
 t_sprite	sprites;
-double		perp_wall_dist;
-int			step_x;
-int			step_y;
-int			hit;
-int			side;
-int			line_height;
-int			draw_start;
-int			draw_end;
-int			map_x;
-int			map_y;
-int			tex_num;
 double		sprite_x;
 double		sprite_y;
 double		inv_det;

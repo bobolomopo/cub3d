@@ -17,84 +17,84 @@ static void raycasting_init(int x)
 	g_param.camera_x = 2 * x / (double)g_param.res_x - 1;
 	g_param.ray_dir_x = g_param.dir_x + g_param.plane_x * g_param.camera_x;
 	g_param.ray_dir_y = g_param.dir_y + g_param.plane_y * g_param.camera_x;
-	map_x = (int)(g_param.pos_x);
-	map_y = (int)(g_param.pos_y);
+	g_param.map_x = (int)(g_param.pos_x);
+	g_param.map_y = (int)(g_param.pos_y);
 	g_param.delta_dist_x = fabs(1 / g_param.ray_dir_x);
 	g_param.delta_dist_y = fabs(1 / g_param.ray_dir_y);
-	hit = 0;
+	g_param.hit = 0;
 }
 
 static void raycasting_init2(int x)
 {
 	if(g_param.ray_dir_x < 0)
 	{
-		step_x = -1;
-		g_param.side_dist_x = (g_param.pos_x - map_x) * g_param.delta_dist_x;
+		g_param.step_x = -1;
+		g_param.side_dist_x = (g_param.pos_x - g_param.map_x) * g_param.delta_dist_x;
 	}
 	else
 	{
-		step_x = 1;
-		g_param.side_dist_x = (map_x + 1.0 - g_param.pos_x) * g_param.delta_dist_x;
+		g_param.step_x = 1;
+		g_param.side_dist_x = (g_param.map_x + 1.0 - g_param.pos_x) * g_param.delta_dist_x;
 	}
 	if(g_param.ray_dir_y < 0)
 	{
-		step_y = -1;
-		g_param.side_dist_y = (g_param.pos_y - map_y) * g_param.delta_dist_y;
+		g_param.step_y = -1;
+		g_param.side_dist_y = (g_param.pos_y - g_param.map_y) * g_param.delta_dist_y;
 	}
 	else
 	{
-		step_y = 1;
-		g_param.side_dist_y = (map_y + 1.0 - g_param.pos_y) * g_param.delta_dist_y;
+		g_param.step_y = 1;
+		g_param.side_dist_y = (g_param.map_y + 1.0 - g_param.pos_y) * g_param.delta_dist_y;
 	}
 }
 
 static void	raycasting_dda()
 {
-	while (hit == 0)
+	while (g_param.hit == 0)
 	{	
 		if(g_param.side_dist_x < g_param.side_dist_y)
 		{
 			g_param.side_dist_x += g_param.delta_dist_x;
-			map_x += step_x;
-			side = 0;
+			g_param.map_x += g_param.step_x;
+			g_param.side = 0;
 		}
 		else
 		{
 			g_param.side_dist_y += g_param.delta_dist_y;
-			map_y += step_y;
-			side = 1;
+			g_param.map_y += g_param.step_y;
+			g_param.side = 1;
 		}
-		if (g_param.map[map_x][map_y] == '1')
-			hit = 1;
+		if (g_param.map[g_param.map_x][g_param.map_y] == '1')
+			g_param.hit = 1;
 	}
 }
 
 static void		raycasting_texturing()
 {
-	if (side == 0)
-			perp_wall_dist = (map_x - g_param.pos_x + (1 - step_x) / 2) / g_param.ray_dir_x;
+	if (g_param.side == 0)
+			g_param.perp_wall_dist = (g_param.map_x - g_param.pos_x + (1 - g_param.step_x) / 2) / g_param.ray_dir_x;
 	else
-		perp_wall_dist = (map_y - g_param.pos_y + (1 - step_y) / 2) / g_param.ray_dir_y;
-	line_height = (int)(g_param.res_y / perp_wall_dist);
-	draw_start = -line_height / 2 + g_param.res_y / 2;
-	if (draw_start < 0)
-		draw_start = 0;
-	draw_end = line_height / 2 + g_param.res_y / 2;
-	if(draw_end >= g_param.res_y)
-		draw_end = g_param.res_y - 1;
-	if (side == 0)
+		g_param.perp_wall_dist = (g_param.map_y - g_param.pos_y + (1 - g_param.step_y) / 2) / g_param.ray_dir_y;
+	g_param.line_height = (int)(g_param.res_y / g_param.perp_wall_dist);
+	g_param.draw_start = -g_param.line_height / 2 + g_param.res_y / 2;
+	if (g_param.draw_start < 0)
+		g_param.draw_start = 0;
+	g_param.draw_end = g_param.line_height / 2 + g_param.res_y / 2;
+	if(g_param.draw_end >= g_param.res_y)
+		g_param.draw_end = g_param.res_y - 1;
+	if (g_param.side == 0)
 	{
 		if (g_param.ray_dir_x < 0)
-			tex_num = 1;
+			g_param.tex_num = 1;
 		else
-			tex_num = 0;
+			g_param.tex_num = 0;
 	}
 	else
 	{
 		if (g_param.ray_dir_y < 0)
-			tex_num = 3;
+			g_param.tex_num = 3;
 		else
-			tex_num = 2;
+			g_param.tex_num = 2;
 	}
 }
 
@@ -102,24 +102,24 @@ static void		raycasting_drawing(int x)
 {
 	int color;
 	double wallX;
-	if(side == 0)
-		wallX = g_param.pos_y + perp_wall_dist * g_param.ray_dir_y;
+	if (g_param.side == 0)
+		wallX = g_param.pos_y + g_param.perp_wall_dist * g_param.ray_dir_y;
 	else
-		wallX = g_param.pos_x + perp_wall_dist * g_param.ray_dir_x;
+		wallX = g_param.pos_x + g_param.perp_wall_dist * g_param.ray_dir_x;
 	wallX -= floor((wallX));
-	int texX = (int)(wallX * (double)(g_param.textures[tex_num].width));
-	if(side == 0 && g_param.ray_dir_x > 0)
-		texX = g_param.textures[tex_num].width - texX - 1;
-	if(side == 1 && g_param.ray_dir_y < 0)
-		texX = g_param.textures[tex_num].width - texX - 1;
-	double step = 1.0 * g_param.textures[tex_num].height / line_height;
-	double texPos = (draw_start - g_param.res_y / 2 + line_height / 2) * step;
-	for(int y = draw_start; y < draw_end; y++)
+	int texX = (int)(wallX * (double)(g_param.textures[g_param.tex_num].width));
+	if (g_param.side == 0 && g_param.ray_dir_x > 0)
+		texX = g_param.textures[g_param.tex_num].width - texX - 1;
+	if (g_param.side == 1 && g_param.ray_dir_y < 0)
+		texX = g_param.textures[g_param.tex_num].width - texX - 1;
+	double step = 1.0 * g_param.textures[g_param.tex_num].height / g_param.line_height;
+	double texPos = (g_param.draw_start - g_param.res_y / 2 + g_param.line_height / 2) * step;
+	for(int y = g_param.draw_start; y < g_param.draw_end; y++)
 	{
-		int texY = (int)texPos & (g_param.textures[tex_num].height - 1);
+		int texY = (int)texPos & (g_param.textures[g_param.tex_num].height - 1);
 		texPos += step;
-		color = get_tex_color(&g_param.textures[tex_num], texX, texY);
-		if(side == 1)
+		color = get_tex_color(&g_param.textures[g_param.tex_num], texX, texY);
+		if (g_param.side == 1)
 			color = (color >> 1) & 8355711;
 		my_mlx_pixel_put(&g_param.game, x, y, color);
 	}
@@ -173,7 +173,6 @@ void		raycasting_sprite_draw(double *z_buffer)
 void	raycasting()
 {
 	int			x;
-	int			tex_num;
 	double		z_buffer[g_param.res_x];
 	int			spriteOrder[g_param.num_sprite];
 	double		spriteDistance[g_param.num_sprite];
@@ -188,7 +187,7 @@ void	raycasting()
 		raycasting_dda();
 		raycasting_texturing();
 		raycasting_drawing(x);
-		z_buffer[x] = perp_wall_dist;
+		z_buffer[x] = g_param.perp_wall_dist;
 		x++;
 	}
 	for(int i = 0; i < g_param.num_sprite; i++)
