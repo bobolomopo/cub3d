@@ -37,7 +37,7 @@
 # include <stdio.h>
 # include <stdlib.h>
 # include <limits.h>
-# include <mlx.h>
+# include "../mlx/mlx.h"
 
 typedef struct		s_display	{
 	void				*mlx;
@@ -57,6 +57,8 @@ typedef struct		s_img		{
 typedef	struct		s_param		{
 	int					res_x;
 	int					res_y;
+	int					max_res_x;
+	int					max_res_y;
 	char				*text_north;
 	char				*text_south;
 	char				*text_west;

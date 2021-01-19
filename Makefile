@@ -22,7 +22,9 @@ OBJ = $(SRC:.c=.o)
 all: $(NAME)
 
 $(NAME):
-	$(CC) $(SRC) -g -fsanitize=address -lmlx -lmlx -framework OpenGL -framework AppKit -o $(NAME)
+	make -C ./mlx all
+	mv ./mlx/libmlx.dylib ./
+	$(CC) $(SRC) -g -fsanitize=address -lmlx -lmlx libmlx.dylib -framework OpenGL -framework AppKit -o $(NAME)
 
 %.o: %.c
 	$(CC) -Wall -Wextra -Werror -Imlx -c $< -o $@
@@ -34,6 +36,7 @@ clean:
 	rm -rf *.o
 
 fclean: clean
+	rm -rf libmlx.dylib
 	rm -rf Cub3D
 
 re: fclean

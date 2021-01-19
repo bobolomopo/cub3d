@@ -12,12 +12,15 @@
 
 #include "../include/cub3d.h"
 
-static int	check_res(int *x, int *y)
+static int	check_res(int x, int y)
 {
-	if (*x > 1980)
-		*x = 1980;
-	if (*y > 1080)
-		*y = 1080;
+	mlx_get_screen_size(g_param.dis.mlx, &g_param.max_res_x, &g_param.max_res_y);
+	if (x == 0 || y == 0)
+		return (parsing_error(NULL, -6));
+	if (x > g_param.max_res_x || x < 0)
+		g_param.res_x = g_param.max_res_x;
+	if (y > g_param.max_res_y || y < 0)
+		g_param.res_y = g_param.max_res_y;
 	return (1);
 }
 
@@ -45,5 +48,5 @@ int			fill_param_res(char *line, t_param *g_param)
 	while (ft_isdigit((int)line[i]) > 0)
 		i++;
 	g_param->res_y = ft_atoi(line + i);
-	return (check_res(&g_param->res_x, &g_param->res_y));
+	return (check_res(g_param->res_x, g_param->res_y));
 }
