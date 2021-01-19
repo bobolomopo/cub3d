@@ -29,55 +29,55 @@ static int			text_error(int a)
 
 static int			test_structure2(void)
 {
-	textures[2].addr = mlx_get_data_addr(textures[2].img,
-								&textures[2].bits_per_pixel,
-								&textures[2].line_length,
-								&textures[2].endian);
-	if (!(textures[3].img = mlx_xpm_file_to_image(g_param.dis.mlx,
+	g_param.textures[2].addr = mlx_get_data_addr(g_param.textures[2].img,
+								&g_param.textures[2].bits_per_pixel,
+								&g_param.textures[2].line_length,
+								&g_param.textures[2].endian);
+	if (!(g_param.textures[3].img = mlx_xpm_file_to_image(g_param.dis.mlx,
 								g_param.text_west,
-								&textures[3].width,
-								&textures[3].height)))
+								&g_param.textures[3].width,
+								&g_param.textures[3].height)))
 		return (text_error(4));
-	textures[3].addr = mlx_get_data_addr(textures[3].img,
-								&textures[3].bits_per_pixel,
-								&textures[3].line_length,
-								&textures[3].endian);
-	if (!(textures[4].img = mlx_xpm_file_to_image(g_param.dis.mlx,
+	g_param.textures[3].addr = mlx_get_data_addr(g_param.textures[3].img,
+								&g_param.textures[3].bits_per_pixel,
+								&g_param.textures[3].line_length,
+								&g_param.textures[3].endian);
+	if (!(g_param.textures[4].img = mlx_xpm_file_to_image(g_param.dis.mlx,
 								g_param.text_sprite,
-								&textures[4].width,
-								&textures[4].height)))
+								&g_param.textures[4].width,
+								&g_param.textures[4].height)))
 		return (text_error(5));
-	textures[4].addr = mlx_get_data_addr(textures[4].img,
-								&textures[4].bits_per_pixel,
-								&textures[4].line_length,
-								&textures[4].endian);
+	g_param.textures[4].addr = mlx_get_data_addr(g_param.textures[4].img,
+								&g_param.textures[4].bits_per_pixel,
+								&g_param.textures[4].line_length,
+								&g_param.textures[4].endian);
 	return (1);
 }
 
 static int			test_structure(void)
 {
-	if (!((textures[0].img) = mlx_xpm_file_to_image(g_param.dis.mlx,
+	if (!((g_param.textures[0].img) = mlx_xpm_file_to_image(g_param.dis.mlx,
 								g_param.text_south,
-								&(textures[0].width),
-								&(textures[0].height))))
+								&(g_param.textures[0].width),
+								&(g_param.textures[0].height))))
 		return (text_error(1));
-	textures[0].addr = mlx_get_data_addr(textures[0].img,
-								&textures[0].bits_per_pixel,
-								&textures[0].line_length,
-								&textures[0].endian);
-	if (!(textures[1].img = mlx_xpm_file_to_image(g_param.dis.mlx,
+	g_param.textures[0].addr = mlx_get_data_addr(g_param.textures[0].img,
+								&g_param.textures[0].bits_per_pixel,
+								&g_param.textures[0].line_length,
+								&g_param.textures[0].endian);
+	if (!(g_param.textures[1].img = mlx_xpm_file_to_image(g_param.dis.mlx,
 								g_param.text_north,
-								&textures[1].width,
-								&textures[1].height)))
+								&g_param.textures[1].width,
+								&g_param.textures[1].height)))
 		return (text_error(2));
-	textures[1].addr = mlx_get_data_addr(textures[1].img,
-								&textures[1].bits_per_pixel,
-								&textures[1].line_length,
-								&textures[1].endian);
-	if (!(textures[2].img = mlx_xpm_file_to_image(g_param.dis.mlx,
+	g_param.textures[1].addr = mlx_get_data_addr(g_param.textures[1].img,
+								&g_param.textures[1].bits_per_pixel,
+								&g_param.textures[1].line_length,
+								&g_param.textures[1].endian);
+	if (!(g_param.textures[2].img = mlx_xpm_file_to_image(g_param.dis.mlx,
 								g_param.text_east,
-								&textures[2].width,
-								&textures[2].height)))
+								&g_param.textures[2].width,
+								&g_param.textures[2].height)))
 		return (text_error(3));
 	return (test_structure2());
 }
@@ -103,9 +103,9 @@ static void			all_to_zero(void)
 
 int					initialize(t_param *g_param)
 {
-	fd = open("./test.cub", O_RDONLY);
+	g_param->fd = open("./test.cub", O_RDONLY);
 	all_to_zero();
-	if (parsing(fd, g_param) < 0)
+	if (parsing(g_param->fd, g_param) < 0)
 		return (-1);
 	if (test_structure() < 0)
 		return (-1);

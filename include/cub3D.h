@@ -72,8 +72,19 @@ typedef	struct		s_param 	{
 	double				pos_y;
 	double				dir_x;
 	double				dir_y;
+	double				plane_x;
+	double				plane_y;
+	double				ray_dir_x;
+	double				ray_dir_y;
+	double				side_dist_x;
+	double				side_dist_y;
+	double				camera_x;
+	double				delta_dist_x;
+	double				delta_dist_y;
+	int					fd;
 	t_display			dis;
 	t_img				game;
+	t_img				textures[5];
 }					t_param;
 
 /*
@@ -123,44 +134,6 @@ typedef struct		s_bmp
 	int					b;
 }					t_bmp;
 
-typedef struct		s_raycast	{
-	double				pos_x;
-	double				pos_y;
-	double				dir_x;
-	double				dir_y;
-	double				plane_x;
-	double				plane_y;
-	double				camera_x;
-	double				ray_dir_x;
-	double				ray_dir_y;
-	double				side_dist_x;
-	double				side_dist_y;
-	double				delta_dist_x;
-	double				delta_dist_y;
-	double				perp_wall_dist;
-	int					step_x;
-	int					step_y;
-	int					hit;
-	int					side;
-	int					line_height;
-	int					draw_start;
-	int					draw_end;
-	int					sprite_x;
-	int					sprite_y;
-	t_img				sprite_text;
-	int					tex_num;
-	double				inv_det;
-	double				transform_x;
-	double				transform_y;
-	int					sprite_screen_x;
-	int					sprite_height;
-	int					draw_start_y;
-	int					draw_end_y;
-	int					sprite_width;
-	int					draw_start_x;
-	int					draw_end_x;
-}					t_raycast;
-
 /*
 **structure contenant la résolution de l'écran, devras faire une 
 **vérification d'erreur pour pouvoir la séparer en parts éégales.
@@ -174,18 +147,7 @@ typedef struct		s_raycast	{
 */
 
 t_param		g_param;
-t_img		textures[5];
 t_sprite	sprites;
-int			fd;
-double		plane_x;
-double		plane_y;
-double		camera_x;
-double		ray_dir_x;
-double		ray_dir_y;
-double		side_dist_x;
-double		side_dist_y;
-double		delta_dist_x;
-double		delta_dist_y;
 double		perp_wall_dist;
 int			step_x;
 int			step_y;

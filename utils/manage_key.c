@@ -58,18 +58,18 @@ static void			rotation(int keycode)
 		old_dir_x = g_param.dir_x;
 		g_param.dir_x = g_param.dir_x * cos(-ROTSPEED) - g_param.dir_y * sin(-ROTSPEED);
 		g_param.dir_y = old_dir_x * sin(-ROTSPEED) + g_param.dir_y * cos(-ROTSPEED);
-		old_plane_x = plane_x;
-		plane_x = plane_x * cos(-ROTSPEED) - plane_y * sin(-ROTSPEED);
-		plane_y = old_plane_x * sin(-ROTSPEED) + plane_y * cos(-ROTSPEED);
+		old_plane_x = g_param.plane_x;
+		g_param.plane_x = g_param.plane_x * cos(-ROTSPEED) - g_param.plane_y * sin(-ROTSPEED);
+		g_param.plane_y = old_plane_x * sin(-ROTSPEED) + g_param.plane_y * cos(-ROTSPEED);
 	}
 	if (keycode == 123)
 	{
 		old_dir_x = g_param.dir_x;
 		g_param.dir_x = g_param.dir_x * cos(ROTSPEED) - g_param.dir_y * sin(ROTSPEED);
 		g_param.dir_y = old_dir_x * sin(ROTSPEED) + g_param.dir_y * cos(ROTSPEED);
-		old_plane_x = plane_x;
-		plane_x = plane_x * cos(ROTSPEED) - plane_y * sin(ROTSPEED);
-		plane_y = old_plane_x * sin(ROTSPEED) + plane_y * cos(ROTSPEED);
+		old_plane_x = g_param.plane_x;
+		g_param.plane_x = g_param.plane_x * cos(ROTSPEED) - g_param.plane_y * sin(ROTSPEED);
+		g_param.plane_y = old_plane_x * sin(ROTSPEED) + g_param.plane_y * cos(ROTSPEED);
 	}
 }
 

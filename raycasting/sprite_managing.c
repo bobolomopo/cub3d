@@ -29,7 +29,7 @@ void		sprite_value(t_sprite *sprite)
 			{
 				sprite[i].x = x + 0.5;
 				sprite[i].y = y + 0.5;
-				sprite[i].text = textures[4];
+				sprite[i].text = g_param.textures[4];
 				i++;
 			}
 			y++;

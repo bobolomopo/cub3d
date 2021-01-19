@@ -40,7 +40,7 @@ void	ft_close(void)
 {
 	mlx_destroy_window(g_param.dis.mlx, g_param.dis.win);
 	free(g_param.dis.mlx);
-	if (fd)
-		close(fd);
+	if (g_param.fd)
+		close(g_param.fd);
 	exit(0);
 }
