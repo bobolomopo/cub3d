@@ -35,26 +35,26 @@ static int		verif(char *line)
 **allouee
 */
 
-static int		fill_map(char **map, t_param *param)
+static int		fill_map(char **map, t_param *g_param)
 {
 	int		y;
 
 	y = 0;
 	while (map[y] != NULL)
 		y++;
-	if (!(param->map = malloc(sizeof(char *) * y + 1)))
+	if (!(g_param->map = malloc(sizeof(char *) * y + 1)))
 		return (-1);
 	y = 0;
 	while (map[y])
 	{
-		if (!(param->map[y] = malloc(sizeof(char) * ft_strlen(map[y]) + 1)))
+		if (!(g_param->map[y] = malloc(sizeof(char) * ft_strlen(map[y]) + 1)))
 			return (-1);
-		ft_strcpy(param->map[y], map[y]);
+		ft_strcpy(g_param->map[y], map[y]);
 		y++;
-		if (y > param->map_h)
-			param->map_h = y;
+		if (y > g_param->map_h)
+			g_param->map_h = y;
 	}
-	param->map_w = y;
+	g_param->map_w = y;
 	while (y-- > 0)
 		free(map[y]);
 	return (1);
@@ -67,20 +67,20 @@ static int		fill_map(char **map, t_param *param)
 **valide
 */
 
-static int		valid_c(char **map, int *i, t_param *param)
+static int		valid_c(char **map, int *i, t_param *g_param)
 {
 	if (ft_isin(map[i[0]][i[1]], "NESW") > 0)
 	{
 		if (i[2] == 1)
 			return (-1);
-		param->pos_x = i[0] + 0.5;
-		param->pos_y = i[1] + 0.5;
-		direction(map[i[0]][i[1]], param);
+		g_param->pos_x = i[0] + 0.5;
+		g_param->pos_y = i[1] + 0.5;
+		direction(map[i[0]][i[1]], g_param);
 		i[2] = 1;
 		map[i[0]][i[1]] = '0';
 	}
 	if (map[i[0]][i[1]] == '2')
-		param->num_sprite += 1;
+		g_param->num_sprite += 1;
 	if (!(map[i[0]][(i[1]) + 1]) ||
 		(ft_isin(map[i[0]][(i[1]) + 1], "012NESW") < 0))
 		return (-1);
@@ -101,7 +101,7 @@ static int		valid_c(char **map, int *i, t_param *param)
 **statique valic_c
 */
 
-static int		verif_open(char **map, t_param *param)
+static int		verif_open(char **map, t_param *g_param)
 {
 	int		i[3];
 
@@ -116,14 +116,14 @@ static int		verif_open(char **map, t_param *param)
 				return (parsing_error(NULL, -7));
 			if (ft_isin(map[i[0]][i[1]], "02NESW") > 0)
 			{
-				if (valid_c(map, i, param) < 0)
+				if (valid_c(map, i, g_param) < 0)
 					return (parsing_error(NULL, -7));
 			}
 			i[1]++;
 		}
 		i[0]++;
 	}
-	return (fill_map(map, param));
+	return (fill_map(map, g_param));
 }
 
 /*
@@ -131,7 +131,7 @@ static int		verif_open(char **map, t_param *param)
 **le param map, les directino et positions de depart du joueur
 */
 
-int				fill_param_map(int fd, t_param *param)
+int				fill_param_map(int fd, t_param *g_param)
 {
 	char	*line[1];
 	int		ret;
@@ -156,5 +156,5 @@ int				fill_param_map(int fd, t_param *param)
 			break ;
 	}
 	map[i] = NULL;
-	return (verif_open(map, param));
+	return (verif_open(map, g_param));
 }

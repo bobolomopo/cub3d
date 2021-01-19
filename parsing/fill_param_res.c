@@ -21,7 +21,7 @@ static int	check_res(int *x, int *y)
 	return (1);
 }
 
-int			fill_param_res(char *line, t_param *param)
+int			fill_param_res(char *line, t_param *g_param)
 {
 	int i;
 	int	count;
@@ -39,11 +39,11 @@ int			fill_param_res(char *line, t_param *param)
 	i = 0;
 	if (count != 2)
 		return (-6);
-	param->res_x = ft_atoi(line);
+	g_param->res_x = ft_atoi(line);
 	while (line[i] == ' ')
 		i++;
 	while (ft_isdigit((int)line[i]) > 0)
 		i++;
-	param->res_y = ft_atoi(line + i);
-	return (check_res(&param->res_x, &param->res_y));
+	g_param->res_y = ft_atoi(line + i);
+	return (check_res(&g_param->res_x, &g_param->res_y));
 }

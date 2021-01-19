@@ -50,7 +50,7 @@ static int	fill_rgb(char *line, int *color)
 	return (i);
 }
 
-static int	transform_rgb(char *line, t_param *param, char c)
+static int	transform_rgb(char *line, t_param *g_param, char c)
 {
 	int		color[3];
 	int		i;
@@ -64,13 +64,13 @@ static int	transform_rgb(char *line, t_param *param, char c)
 			return (-5);
 	}
 	if (c == 'F')
-		param->floor_color = (color[0] << 16) + (color[1] << 8) + color[2];
+		g_param->floor_color = (color[0] << 16) + (color[1] << 8) + color[2];
 	if (c == 'C')
-		param->ceiling_color = (color[0] << 16) + (color[1] << 8) + color[2];
+		g_param->ceiling_color = (color[0] << 16) + (color[1] << 8) + color[2];
 	return (1);
 }
 
-int			fill_param_rgb(char *line, t_param *param, char c)
+int			fill_param_rgb(char *line, t_param *g_param, char c)
 {
 	int		i;
 	int		count_coma;
@@ -92,5 +92,5 @@ int			fill_param_rgb(char *line, t_param *param, char c)
 	}
 	if (count_coma != 2)
 		return (-5);
-	return (transform_rgb(line, param, c));
+	return (transform_rgb(line, g_param, c));
 }

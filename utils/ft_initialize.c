@@ -33,8 +33,8 @@ static int			test_structure2(void)
 								&textures[2].bits_per_pixel,
 								&textures[2].line_length,
 								&textures[2].endian);
-	if (!(textures[3].img = mlx_xpm_file_to_image(dis.mlx,
-								param.text_west,
+	if (!(textures[3].img = mlx_xpm_file_to_image(g_param.dis.mlx,
+								g_param.text_west,
 								&textures[3].width,
 								&textures[3].height)))
 		return (text_error(4));
@@ -42,8 +42,8 @@ static int			test_structure2(void)
 								&textures[3].bits_per_pixel,
 								&textures[3].line_length,
 								&textures[3].endian);
-	if (!(textures[4].img = mlx_xpm_file_to_image(dis.mlx,
-								param.text_sprite,
+	if (!(textures[4].img = mlx_xpm_file_to_image(g_param.dis.mlx,
+								g_param.text_sprite,
 								&textures[4].width,
 								&textures[4].height)))
 		return (text_error(5));
@@ -56,8 +56,8 @@ static int			test_structure2(void)
 
 static int			test_structure(void)
 {
-	if (!((textures[0].img) = mlx_xpm_file_to_image(dis.mlx,
-								param.text_south,
+	if (!((textures[0].img) = mlx_xpm_file_to_image(g_param.dis.mlx,
+								g_param.text_south,
 								&(textures[0].width),
 								&(textures[0].height))))
 		return (text_error(1));
@@ -65,8 +65,8 @@ static int			test_structure(void)
 								&textures[0].bits_per_pixel,
 								&textures[0].line_length,
 								&textures[0].endian);
-	if (!(textures[1].img = mlx_xpm_file_to_image(dis.mlx,
-								param.text_north,
+	if (!(textures[1].img = mlx_xpm_file_to_image(g_param.dis.mlx,
+								g_param.text_north,
 								&textures[1].width,
 								&textures[1].height)))
 		return (text_error(2));
@@ -74,8 +74,8 @@ static int			test_structure(void)
 								&textures[1].bits_per_pixel,
 								&textures[1].line_length,
 								&textures[1].endian);
-	if (!(textures[2].img = mlx_xpm_file_to_image(dis.mlx,
-								param.text_east,
+	if (!(textures[2].img = mlx_xpm_file_to_image(g_param.dis.mlx,
+								g_param.text_east,
 								&textures[2].width,
 								&textures[2].height)))
 		return (text_error(3));
@@ -84,28 +84,28 @@ static int			test_structure(void)
 
 static void			all_to_zero(void)
 {
-	param.res_x = 0;
-	param.res_y = 0;
-	param.text_north = NULL;
-	param.text_south = NULL;
-	param.text_east = NULL;
-	param.text_west = NULL;
-	param.floor_color = -1;
-	param.ceiling_color = -1;
-	param.text_sprite = NULL;
-	param.map = NULL;
-	param.num_sprite = 0;
-	param.pos_x = 0;
-	param.pos_y = 0;
-	param.dir_x = 0;
-	param.dir_y = 0;
+	g_param.res_x = 0;
+	g_param.res_y = 0;
+	g_param.text_north = NULL;
+	g_param.text_south = NULL;
+	g_param.text_east = NULL;
+	g_param.text_west = NULL;
+	g_param.floor_color = -1;
+	g_param.ceiling_color = -1;
+	g_param.text_sprite = NULL;
+	g_param.map = NULL;
+	g_param.num_sprite = 0;
+	g_param.pos_x = 0;
+	g_param.pos_y = 0;
+	g_param.dir_x = 0;
+	g_param.dir_y = 0;
 }
 
-int					initialize(t_param *param)
+int					initialize(t_param *g_param)
 {
 	fd = open("./test.cub", O_RDONLY);
 	all_to_zero();
-	if (parsing(fd, param) < 0)
+	if (parsing(fd, g_param) < 0)
 		return (-1);
 	if (test_structure() < 0)
 		return (-1);

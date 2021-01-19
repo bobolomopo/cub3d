@@ -23,12 +23,12 @@ void	draw_ceil_floor(int width, int height)
 		y = 0;
 		while (y < height / 2)
 		{
-			my_mlx_pixel_put(&game.img, x, y, param.ceiling_color);
+			my_mlx_pixel_put(&g_param.game, x, y, g_param.ceiling_color);
 			y++;
 		}
 		while (y < height)
 		{
-			my_mlx_pixel_put(&game.img, x, y, param.floor_color);
+			my_mlx_pixel_put(&g_param.game, x, y, g_param.floor_color);
 			y++;
 		}
 		x++;

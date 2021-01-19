@@ -22,27 +22,27 @@ static int		ch_comp_param(char c)
 	return (-1);
 }
 
-static int		is_param_filled(t_param *param)
+static int		is_param_filled(t_param *g_param)
 {
-	if (param->res_x != 0 && param->res_y != 0
-			&& param->text_north && param->text_south && param->text_west &&
-			param->text_east && param->text_sprite && param->floor_color >= 0
-			&& param->ceiling_color >= 0)
+	if (g_param->res_x != 0 && g_param->res_y != 0
+			&& g_param->text_north && g_param->text_south && g_param->text_west &&
+			g_param->text_east && g_param->text_sprite && g_param->floor_color >= 0
+			&& g_param->ceiling_color >= 0)
 		return (1);
 	else
 		return (-1);
 }
 
-int				parsing(int fd, t_param *param)
+int				parsing(int fd, t_param *g_param)
 {
 	char	*line[1];
 	int		ret;
 	char	*ptr;
 
 	ret = 1;
-	if (is_param_filled(param))
+	if (is_param_filled(g_param))
 	{
-		while ((is_param_filled(param) < 0 && (ret = get_next_line(fd, line))))
+		while ((is_param_filled(g_param) < 0 && (ret = get_next_line(fd, line))))
 		{
 			ptr = *line;
 			while (**line == ' ' || **line == '\n')
@@ -51,13 +51,13 @@ int				parsing(int fd, t_param *param)
 				return (parsing_error(ptr, -2));
 			if (**line && ch_comp_param(**line) == 1)
 			{
-				if ((ret = fill_param(*line, param)) < 0)
+				if ((ret = fill_param(*line, g_param)) < 0)
 					return (parsing_error(ptr, ret));
 			}
 			free(ptr);
 		}
 	}
-	if (is_param_filled(param) < 0)
+	if (is_param_filled(g_param) < 0)
 		return (parsing_error(NULL, -3));
-	return (fill_param_map(fd, param));
+	return (fill_param_map(fd, g_param));
 }

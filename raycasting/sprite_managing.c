@@ -20,12 +20,12 @@ void		sprite_value(t_sprite *sprite)
 
 	x = 0;
 	i = 0;
-	while (x < param.map_h)
+	while (x < g_param.map_h)
 	{
 		y = 0;
-		while (param.map[x][y])
+		while (g_param.map[x][y])
 		{
-			if (param.map[x][y] == '2')
+			if (g_param.map[x][y] == '2')
 			{
 				sprite[i].x = x + 0.5;
 				sprite[i].y = y + 0.5;

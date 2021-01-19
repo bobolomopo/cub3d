@@ -12,42 +12,42 @@
 
 #include "../include/cub3D.h"
 
-static void			direction_we(char c, t_param *param)
+static void			direction_we(char c, t_param *g_param)
 {
 	if (c == 'W')
 	{
-		param->dir_y = -1;
+		g_param->dir_y = -1;
 		plane_x = -0.66;
 		plane_y = 0;
 	}
 	if (c == 'E')
 	{
-		param->dir_y = 1;
+		g_param->dir_y = 1;
 		plane_x = 0.66;
 		plane_y = 0;
 	}
 }
 
-static void			direction_ns(char c, t_param *param)
+static void			direction_ns(char c, t_param *g_param)
 {
 	if (c == 'N')
 	{
-		param->dir_x = -1;
+		g_param->dir_x = -1;
 		plane_x = 0;
 		plane_y = 0.66;
 	}
 	if (c == 'S')
 	{
-		param->dir_x = 1;
+		g_param->dir_x = 1;
 		plane_x = 0;
 		plane_y = -0.66;
 	}
 }
 
-void				direction(char c, t_param *param)
+void				direction(char c, t_param *g_param)
 {
-	param->dir_x = 0;
-	param->dir_y = 0;
-	direction_we(c, param);
-	direction_ns(c, param);
+	g_param->dir_x = 0;
+	g_param->dir_y = 0;
+	direction_we(c, g_param);
+	direction_ns(c, g_param);
 }

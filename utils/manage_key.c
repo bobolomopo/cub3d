@@ -16,17 +16,17 @@ static void			lateral_mouvement(int keycode)
 {
 	if (keycode == 2)
 	{
-		if ((param.map[(int)(posX + dirY * MOVESPEED)][(int)(posY)]) == '0')
-			posX += dirY * MOVESPEED;
-		if ((param.map[(int)(posX)][(int)(posY - dirX * MOVESPEED)]) == '0')
-			posY -= dirX * MOVESPEED;
+		if ((g_param.map[(int)(g_param.pos_x + g_param.dir_y * MOVESPEED)][(int)(g_param.pos_y)]) == '0')
+			g_param.pos_x += g_param.dir_y * MOVESPEED;
+		if ((g_param.map[(int)(g_param.pos_x)][(int)(g_param.pos_y - g_param.dir_x * MOVESPEED)]) == '0')
+			g_param.pos_y -= g_param.dir_x * MOVESPEED;
 	}
 	if (keycode == 0)
 	{
-		if ((param.map[(int)(posX - dirY * MOVESPEED)][(int)(posY)]) == '0')
-			posX -= dirY * MOVESPEED;
-		if ((param.map[(int)(posX)][(int)(posY + dirX * MOVESPEED)]) == '0')
-			posY += dirX * MOVESPEED;
+		if ((g_param.map[(int)(g_param.pos_x - g_param.dir_y * MOVESPEED)][(int)(g_param.pos_y)]) == '0')
+			g_param.pos_x -= g_param.dir_y * MOVESPEED;
+		if ((g_param.map[(int)(g_param.pos_x)][(int)(g_param.pos_y + g_param.dir_x * MOVESPEED)]) == '0')
+			g_param.pos_y += g_param.dir_x * MOVESPEED;
 	}
 }
 
@@ -34,17 +34,17 @@ static void			linear_movement(int keycode)
 {
 	if (keycode == 13)
 	{
-		if ((param.map[(int)(posX + dirX * MOVESPEED)][(int)(posY)]) == '0')
-			posX += dirX * MOVESPEED;
-		if ((param.map[(int)(posX)][(int)(posY + dirY * MOVESPEED)]) == '0')
-			posY += dirY * MOVESPEED;
+		if ((g_param.map[(int)(g_param.pos_x + g_param.dir_x * MOVESPEED)][(int)(g_param.pos_y)]) == '0')
+			g_param.pos_x += g_param.dir_x * MOVESPEED;
+		if ((g_param.map[(int)(g_param.pos_x)][(int)(g_param.pos_y + g_param.dir_y * MOVESPEED)]) == '0')
+			g_param.pos_y += g_param.dir_y * MOVESPEED;
 	}
 	if (keycode == 1)
 	{
-		if ((param.map[(int)(posX - dirX * MOVESPEED)][(int)(posY)]) == '0')
-			posX -= dirX * MOVESPEED;
-		if ((param.map[(int)(posX)][(int)(posY - dirY * MOVESPEED)]) == '0')
-			posY -= dirY * MOVESPEED;
+		if ((g_param.map[(int)(g_param.pos_x - g_param.dir_x * MOVESPEED)][(int)(g_param.pos_y)]) == '0')
+			g_param.pos_x -= g_param.dir_x * MOVESPEED;
+		if ((g_param.map[(int)(g_param.pos_x)][(int)(g_param.pos_y - g_param.dir_y * MOVESPEED)]) == '0')
+			g_param.pos_y -= g_param.dir_y * MOVESPEED;
 	}
 }
 
@@ -55,18 +55,18 @@ static void			rotation(int keycode)
 
 	if (keycode == 124)
 	{
-		old_dir_x = dirX;
-		dirX = dirX * cos(-ROTSPEED) - dirY * sin(-ROTSPEED);
-		dirY = old_dir_x * sin(-ROTSPEED) + dirY * cos(-ROTSPEED);
+		old_dir_x = g_param.dir_x;
+		g_param.dir_x = g_param.dir_x * cos(-ROTSPEED) - g_param.dir_y * sin(-ROTSPEED);
+		g_param.dir_y = old_dir_x * sin(-ROTSPEED) + g_param.dir_y * cos(-ROTSPEED);
 		old_plane_x = plane_x;
 		plane_x = plane_x * cos(-ROTSPEED) - plane_y * sin(-ROTSPEED);
 		plane_y = old_plane_x * sin(-ROTSPEED) + plane_y * cos(-ROTSPEED);
 	}
 	if (keycode == 123)
 	{
-		old_dir_x = dirX;
-		dirX = dirX * cos(ROTSPEED) - dirY * sin(ROTSPEED);
-		dirY = old_dir_x * sin(ROTSPEED) + dirY * cos(ROTSPEED);
+		old_dir_x = g_param.dir_x;
+		g_param.dir_x = g_param.dir_x * cos(ROTSPEED) - g_param.dir_y * sin(ROTSPEED);
+		g_param.dir_y = old_dir_x * sin(ROTSPEED) + g_param.dir_y * cos(ROTSPEED);
 		old_plane_x = plane_x;
 		plane_x = plane_x * cos(ROTSPEED) - plane_y * sin(ROTSPEED);
 		plane_y = old_plane_x * sin(ROTSPEED) + plane_y * cos(ROTSPEED);
@@ -83,8 +83,8 @@ int					manage_key(int keycode)
 		rotation(keycode);
 	if (keycode == 53)
 		ft_close();
-	draw_ceil_floor(param.res_x, param.res_y);
+	draw_ceil_floor(g_param.res_x, g_param.res_y);
 	raycasting();
-	mlx_put_image_to_window(dis.mlx, dis.win, game.img.img, 0, 0);
+	mlx_put_image_to_window(g_param.dis.mlx, g_param.dis.win, g_param.game.img, 0, 0);
 	return (1);
 }

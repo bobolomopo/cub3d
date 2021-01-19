@@ -19,23 +19,19 @@ int main(int argc, char **argv)
 		if (argc > 2 || ft_strcmp(argv[1], "--save") != 0)
 			return (0);
 	}
-	dis.mlx = mlx_init();
-	if (initialize(&param) < 0)
+	g_param.dis.mlx = mlx_init();
+	if (initialize(&g_param) < 0)
         return (-1);
-	posX = param.pos_x;
-	posY = param.pos_y;
-	dirX = param.dir_x;
-	dirY = param.dir_y;
 	int i = 0;
-	dis.win = mlx_new_window(dis.mlx, param.res_x, param.res_y, "Cub3D");
-	game.img.img = mlx_new_image(dis.mlx, param.res_x, param.res_y);
-	game.img.addr = mlx_get_data_addr(game.img.img, &game.img.bits_per_pixel, &game.img.line_length, &game.img.endian);
-	draw_ceil_floor(param.res_x, param.res_y);
+	g_param.dis.win = mlx_new_window(g_param.dis.mlx, g_param.res_x, g_param.res_y, "Cub3D");
+	g_param.game.img = mlx_new_image(g_param.dis.mlx, g_param.res_x, g_param.res_y);
+	g_param.game.addr = mlx_get_data_addr(g_param.game.img, &g_param.game.bits_per_pixel, &g_param.game.line_length, &g_param.game.endian);
+	draw_ceil_floor(g_param.res_x, g_param.res_y);
 	raycasting();
-	mlx_put_image_to_window(dis.mlx, dis.win, game.img.img, 0, 0);
+	mlx_put_image_to_window(g_param.dis.mlx, g_param.dis.win, g_param.game.img, 0, 0);
 	if (argv[1] && ft_strcmp(argv[1], "--save") == 0)
 		create_image();
-	mlx_hook(dis.win, 2, 1L<<0, manage_key, &dis);
-    mlx_loop(dis.mlx);
+	mlx_hook(g_param.dis.win, 2, 1L<<0, manage_key, &g_param.dis);
+    mlx_loop(g_param.dis.mlx);
 	return (0);
 }

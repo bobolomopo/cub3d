@@ -39,9 +39,20 @@
 # include <limits.h>
 # include <mlx.h>
 
-/*
-**structure comportant tout les parametre de mon cub3d
-*/
+typedef struct		s_display	{
+	void				*mlx;
+	void				*win;
+}					t_display;
+
+typedef struct		s_img		{
+	void				*img;
+	char				*addr;
+	int					bits_per_pixel;
+	int					line_length;
+	int					endian;
+	int					width;
+	int					height;
+}					t_img;
 
 typedef	struct		s_param 	{
 	int					res_x;
@@ -61,6 +72,8 @@ typedef	struct		s_param 	{
 	double				pos_y;
 	double				dir_x;
 	double				dir_y;
+	t_display			dis;
+	t_img				game;
 }					t_param;
 
 /*
@@ -68,25 +81,12 @@ typedef	struct		s_param 	{
 **image
 */
 
-typedef struct		s_img		{
-	void				*img;
-	char				*addr;
-	int					bits_per_pixel;
-	int					line_length;
-	int					endian;
-	int					width;
-	int					height;
-}					t_img;
+
 
 /*
 **ecran et moniteur sur lequel s'affiche la fenetre, peut-être réunir
 **avec la résolution
 */
-
-typedef struct		s_display	{
-	void				*mlx;
-	void				*win;
-}					t_display;
 
 /*
 **contiendra la position en temps réel du point de vue du personnage
@@ -173,16 +173,10 @@ typedef struct		s_raycast	{
 **viendront du fichier .cub
 */
 
-t_display	dis;
-t_game		game;
-t_param		param;
+t_param		g_param;
 t_img		textures[5];
 t_sprite	sprites;
 int			fd;
-double		posX;
-double		posY;
-double		dirX;
-double		dirY;
 double		plane_x;
 double		plane_y;
 double		camera_x;
