@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/cub3D.h"
+#include "../include/cub3d.h"
 
 int				parsing_error(char *ptr, int ret)
 {
@@ -36,7 +36,7 @@ int				parsing_error(char *ptr, int ret)
 	return (-1);
 }
 
-void	ft_close(void)
+void			ft_close(void)
 {
 	mlx_destroy_window(g_param.dis.mlx, g_param.dis.win);
 	free(g_param.dis.mlx);

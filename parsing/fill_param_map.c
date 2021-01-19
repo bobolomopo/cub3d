@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/cub3D.h"
+#include "../include/cub3d.h"
 
 /*
 **on verifie si la ligne n'est composee que de caracteres autorise dans la map

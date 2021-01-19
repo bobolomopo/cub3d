@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/cub3D.h"
+#include "../include/cub3d.h"
 
 static int		ch_comp_param(char c)
 {
@@ -22,12 +22,14 @@ static int		ch_comp_param(char c)
 	return (-1);
 }
 
-static int		is_param_filled(t_param *g_param)
+static int		is_param_fill(t_param *g_param)
 {
 	if (g_param->res_x != 0 && g_param->res_y != 0
-			&& g_param->text_north && g_param->text_south && g_param->text_west &&
-			g_param->text_east && g_param->text_sprite && g_param->floor_color >= 0
-			&& g_param->ceiling_color >= 0)
+				&& g_param->text_north && g_param->text_south &&
+				g_param->text_west &&
+				g_param->text_east && g_param->text_sprite &&
+				g_param->floor_color >= 0
+				&& g_param->ceiling_color >= 0)
 		return (1);
 	else
 		return (-1);
@@ -40,9 +42,9 @@ int				parsing(int fd, t_param *g_param)
 	char	*ptr;
 
 	ret = 1;
-	if (is_param_filled(g_param))
+	if (is_param_fill(g_param))
 	{
-		while ((is_param_filled(g_param) < 0 && (ret = get_next_line(fd, line))))
+		while ((is_param_fill(g_param) < 0 && (ret = get_next_line(fd, line))))
 		{
 			ptr = *line;
 			while (**line == ' ' || **line == '\n')
@@ -57,7 +59,7 @@ int				parsing(int fd, t_param *g_param)
 			free(ptr);
 		}
 	}
-	if (is_param_filled(g_param) < 0)
+	if (is_param_fill(g_param) < 0)
 		return (parsing_error(NULL, -3));
 	return (fill_param_map(fd, g_param));
 }

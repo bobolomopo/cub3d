@@ -10,9 +10,9 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "include/cub3D.h"
+#include "include/cub3d.h"
 
-int main(int argc, char **argv)
+int		main(int argc, char **argv)
 {
 	if (argc != 1)
 	{
@@ -21,17 +21,21 @@ int main(int argc, char **argv)
 	}
 	g_param.dis.mlx = mlx_init();
 	if (initialize(&g_param) < 0)
-        return (-1);
-	int i = 0;
-	g_param.dis.win = mlx_new_window(g_param.dis.mlx, g_param.res_x, g_param.res_y, "Cub3D");
-	g_param.game.img = mlx_new_image(g_param.dis.mlx, g_param.res_x, g_param.res_y);
-	g_param.game.addr = mlx_get_data_addr(g_param.game.img, &g_param.game.bits_per_pixel, &g_param.game.line_length, &g_param.game.endian);
+		return (-1);
+	g_param.dis.win = mlx_new_window(g_param.dis.mlx, g_param.res_x,
+			g_param.res_y, "Cub3D");
+	g_param.game.img = mlx_new_image(g_param.dis.mlx, g_param.res_x,
+			g_param.res_y);
+	g_param.game.addr = mlx_get_data_addr(g_param.game.img,
+			&g_param.game.bits_per_pixel, &g_param.game.line_length,
+			&g_param.game.endian);
 	draw_ceil_floor(g_param.res_x, g_param.res_y);
 	raycasting();
-	mlx_put_image_to_window(g_param.dis.mlx, g_param.dis.win, g_param.game.img, 0, 0);
+	mlx_put_image_to_window(g_param.dis.mlx, g_param.dis.win,
+			g_param.game.img, 0, 0);
 	if (argv[1] && ft_strcmp(argv[1], "--save") == 0)
 		create_image();
-	mlx_hook(g_param.dis.win, 2, 1L<<0, manage_key, &g_param.dis);
-    mlx_loop(g_param.dis.mlx);
+	mlx_hook(g_param.dis.win, 2, 1L << 0, manage_key, &g_param.dis);
+	mlx_loop(g_param.dis.mlx);
 	return (0);
 }

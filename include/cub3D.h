@@ -54,7 +54,7 @@ typedef struct		s_img		{
 	int					height;
 }					t_img;
 
-typedef	struct		s_param 	{
+typedef	struct		s_param		{
 	int					res_x;
 	int					res_y;
 	char				*text_north;
@@ -104,37 +104,14 @@ typedef	struct		s_param 	{
 	double				inv_det;
 	double				transform_x;
 	double				transform_y;
+	double				wall_x;
+	double				step;
+	double				tex_pos;
 	int					fd;
 	t_display			dis;
 	t_img				game;
 	t_img				textures[5];
 }					t_param;
-
-/*
-**simple structure avec tout ce qui est nécessaire pour définir une
-**image
-*/
-
-
-
-/*
-**ecran et moniteur sur lequel s'affiche la fenetre, peut-être réunir
-**avec la résolution
-*/
-
-/*
-**contiendra la position en temps réel du point de vue du personnage
-**pourra peut-être aussi directement contenir la position de base
-**surement pas nécessaire.
-*/
-
-typedef struct		s_game		{
-	int					pos_x;
-	int					pos_y;
-	float	angle;
-	t_img				img;
-}					t_game;
-
 
 typedef struct		s_sprite	{
 	double				x;
@@ -157,62 +134,53 @@ typedef struct		s_bmp
 	int					b;
 }					t_bmp;
 
-/*
-**structure contenant la résolution de l'écran, devras faire une 
-**vérification d'erreur pour pouvoir la séparer en parts éégales.
-**intéressants de le réunir avec d'autres variables en une structure
-**peut-être
-*/
+t_param				g_param;
 
-/*
-**Valeurs définies par défauts pour les tests, plus tard elles
-**viendront du fichier .cub
-*/
-
-t_param		g_param;
-t_sprite	sprites;
-
-
-int			ft_strlen(const char *str);
-char		*ft_substr(char const *s, int start, int len);
-char		*ft_strjoin(char const *s1, char const *s2);
-char		*ft_strcpy(char *dst, const char *src);
-char		*ft_strchr(const char *s, int c);
-int			pos(char *str, char c);
-int			ft_initialize(int fd, char **line, char **rest);
-int			ft_copy(char **rest, int fd);
-int			get_next_line(int fd, char **line);
-char		*ft_strnew(int size);
-int			ft_strlen_n(char *str, char stop);
-int			ft_nbrlen(int n);
-int			ft_isdigit(int c);
-int     	ft_isin(char c, const char *str);
-int			ft_atoi(const char *str);
-char		*fill_char(char *line);
-int			parsing(int fd, t_param *param);
-int			fill_param(char *line, t_param *param);
-int			fill_param_rgb(char *line, t_param *param, char c);
-int			fill_param_res(char *line, t_param *param);
-int			fill_param_char(char *line, t_param *param);
-int			fill_param_map(int fd, t_param *param);
-int			parsing_error(char *ptr, int ret);
-void		doublefree(char *str, char *str2);
-void    	direction(char c, t_param *param);
-void		my_mlx_pixel_put(t_img *data, int x, int y, int color);
-int			initialize();
-void		ft_close();
-void		draw_ver_line(int x, int drawStart, int drawEnd, int color);
-void		draw_ceil_floor(int width, int height);
-void		raycasting();
-int			manage_key(int keycode);
-int			get_tex_color(t_img *tex, int x, int y);
-void		sprite_value(t_sprite *sprite);
-void		sortsprite(int *sprite_order, double *spriteDistance, int numsprite);
-void		create_image();
-void		*ft_calloc(size_t count, size_t size);
-void		ft_bzero(void *s, unsigned int n);
-void		*ft_memset(void *b, int c, unsigned int len);
-int			parsing_error(char *ptr, int ret);
-int			ft_strcmp(const char *s1, const char *s2);
+int					ft_strlen(const char *str);
+char				*ft_substr(char const *s, int start, int len);
+char				*ft_strjoin(char const *s1, char const *s2);
+char				*ft_strcpy(char *dst, const char *src);
+char				*ft_strchr(const char *s, int c);
+int					pos(char *str, char c);
+int					ft_initialize(int fd, char **line, char **rest);
+int					ft_copy(char **rest, int fd);
+int					get_next_line(int fd, char **line);
+char				*ft_strnew(int size);
+int					ft_strlen_n(char *str, char stop);
+int					ft_nbrlen(int n);
+int					ft_isdigit(int c);
+int					ft_isin(char c, const char *str);
+int					ft_atoi(const char *str);
+char				*fill_char(char *line);
+int					parsing(int fd, t_param *param);
+int					fill_param(char *line, t_param *param);
+int					fill_param_rgb(char *line, t_param *param, char c);
+int					fill_param_res(char *line, t_param *param);
+int					fill_param_char(char *line, t_param *param);
+int					fill_param_map(int fd, t_param *param);
+int					parsing_error(char *ptr, int ret);
+void				doublefree(char *str, char *str2);
+void				direction(char c, t_param *param);
+void				my_mlx_pixel_put(t_img *data, int x, int y, int color);
+int					initialize();
+void				ft_close();
+void				draw_ceil_floor(int width, int height);
+void				raycasting();
+int					manage_key(int keycode);
+int					get_tex_color(t_img *tex, int x, int y);
+void				sprite_value(t_sprite *sprite);
+void				sortsprite(int *sprite_order, double *sprite_distance,
+								int numsprite);
+void				create_image(void);
+void				*ft_calloc(size_t count, size_t size);
+void				ft_bzero(void *s, unsigned int n);
+void				*ft_memset(void *b, int c, unsigned int len);
+int					parsing_error(char *ptr, int ret);
+int					ft_strcmp(const char *s1, const char *s2);
+void				raycasting_drawing(int x);
+void				raycasting_texturing();
+void				raycasting_sprite_init(t_sprite *sprite,
+									int *sprite_order, int i);
+void				raycasting_sprite_draw(double *z_buffer);
 
 #endif
