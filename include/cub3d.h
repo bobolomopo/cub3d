@@ -18,6 +18,9 @@
 # ifndef GRIDSIZE
 #  define GRIDSIZE 60
 # endif
+# ifndef MAXMAPSIZE
+#  define MAXMAPSIZE 100
+# endif
 # ifndef OPEN_MAX
 #  define OPEN_MAX 256
 # endif
@@ -67,7 +70,10 @@ typedef	struct		s_param		{
 	char				*text_sprite;
 	int					floor_color;
 	int					ceiling_color;
-	char				**map;
+	char				*map[MAXMAPSIZE];
+	int					map_start_x;
+	int					map_start_y;
+	int					is_start;
 	int					num_sprite;
 	int					map_w;
 	int					map_h;
@@ -189,5 +195,7 @@ void				raycasting_sprite_init(t_sprite *sprite,
 void				raycasting_sprite_draw(double *z_buffer);
 int					get_to_map(int fd);
 int					ft_isin_str(char *str, char *str2);
+int					copy_map(int fd, char *line);
+int					flood_fill(char **map, int start_x, int start_y);
 
 #endif

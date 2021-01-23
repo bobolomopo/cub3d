@@ -80,11 +80,10 @@ int				ft_close(void)
 		free(g_param.text_sprite);
 	if (g_param.text_south)
 		free(g_param.text_south);
-	if (g_param.map)
+	while (i-- > 0)
 	{
-		while (i-- > 0)
+		if (g_param.map[i])
 			free(g_param.map[i]);
-		free(g_param.map);
 	}
 	destroy_images();
 	exit(0);

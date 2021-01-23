@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/cub3d.h"
+/*#include "../include/cub3d.h"
 
 static int		verif(char *line)
 {
@@ -134,3 +134,4 @@ int				fill_param_map(int fd, t_param *g_param)
 	map[i] = NULL;
 	return (verif_open(map, g_param));
 }
+*/

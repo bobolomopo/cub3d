@@ -68,6 +68,7 @@ static void		raycasting_dda(void)
 			g_param.map_y += g_param.step_y;
 			g_param.side = 1;
 		}
+		printf("%c\n", g_param.map[g_param.map_x][g_param.map_y]);
 		if (g_param.map[g_param.map_x][g_param.map_y] == '1')
 			g_param.hit = 1;
 	}

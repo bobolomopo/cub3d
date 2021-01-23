@@ -93,7 +93,6 @@ void				all_to_zero(void)
 	g_param.floor_color = -1;
 	g_param.ceiling_color = -1;
 	g_param.text_sprite = NULL;
-	g_param.map = NULL;
 	g_param.num_sprite = 0;
 	g_param.pos_x = 0;
 	g_param.pos_y = 0;
@@ -109,6 +108,8 @@ int					initialize(t_param *g_param)
 	all_to_zero();
 	if (parsing(g_param->fd, g_param) < 0)
 		return (-1);
+	g_param->pos_x = g_param->map_start_x;
+	g_param->pos_y = g_param->map_start_y;
 	if (test_structure() < 0)
 		return (-1);
 	return (1);

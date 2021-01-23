@@ -34,7 +34,6 @@ int		ft_isin_str(char *str, char *str2)
 	i = 0;
 	while (str2[i])
 	{
-		printf("ok\n");
 		j = 0;
 		while (str[j])
 		{
