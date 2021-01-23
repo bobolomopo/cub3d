@@ -15,15 +15,15 @@
 static int			text_error(int a)
 {
 	if (a == 1)
-		write(1, "error : mauvaise texture sud\n", 29);
+		write(1, "Error\nmauvaise texture sud\n", 27);
 	if (a == 2)
-		write(1, "error : mauvaise texture nord\n", 30);
+		write(1, "Error\nmauvaise texture nord\n", 28);
 	if (a == 3)
-		write(1, "error : mauvaise texture est\n", 29);
+		write(1, "Error\nmauvaise texture est\n", 27);
 	if (a == 4)
-		write(1, "error : mauvaise texture ouest\n", 31);
+		write(1, "Error\nmauvaise texture ouest\n", 29);
 	if (a == 5)
-		write(1, "error : mauvaise texture sprite\n", 32);
+		write(1, "Error\nmauvaise texture sprite\n", 30);
 	return (-1);
 }
 
@@ -82,7 +82,7 @@ static int			test_structure(void)
 	return (test_structure2());
 }
 
-static void			all_to_zero(void)
+void				all_to_zero(void)
 {
 	g_param.res_x = 0;
 	g_param.res_y = 0;
@@ -103,7 +103,9 @@ static void			all_to_zero(void)
 
 int					initialize(t_param *g_param)
 {
-	g_param->fd = open("./test.cub", O_RDONLY);
+	if ((g_param->fd = open(g_param->cub, O_RDONLY)) < 0 ||
+		is_cub(g_param->cub) < 0)
+		return (msg_error(2));
 	all_to_zero();
 	if (parsing(g_param->fd, g_param) < 0)
 		return (-1);

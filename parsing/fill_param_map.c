@@ -12,10 +12,6 @@
 
 #include "../include/cub3d.h"
 
-/*
-**on verifie si la ligne n'est composee que de caracteres autorise dans la map
-*/
-
 static int		verif(char *line)
 {
 	int		i;
@@ -29,11 +25,6 @@ static int		verif(char *line)
 	}
 	return (1);
 }
-
-/*
-**on remplit la parametre map et on oublie pas de free les str qui ont ete
-**allouee
-*/
 
 static int		fill_map(char **map, t_param *g_param)
 {
@@ -59,13 +50,6 @@ static int		fill_map(char **map, t_param *g_param)
 		free(map[y]);
 	return (1);
 }
-
-/*
-**on verifie si le caractere est bien autorise et si la map est fermee en
-**verifiant tout les caractere quie l'entoure, il ne peut etre entoure que
-**par un mur ou alors par un autre espace vide, sinon la map n'est pas
-**valide
-*/
 
 static int		valid_c(char **map, int *i, t_param *g_param)
 {
@@ -96,11 +80,6 @@ static int		valid_c(char **map, int *i, t_param *g_param)
 	return (1);
 }
 
-/*
-**verification si la map est ouverte, en deux partie avec la fonction
-**statique valic_c
-*/
-
 static int		verif_open(char **map, t_param *g_param)
 {
 	int		i[3];
@@ -125,11 +104,6 @@ static int		verif_open(char **map, t_param *g_param)
 	}
 	return (fill_map(map, g_param));
 }
-
-/*
-**fonction principale pour remplir la parametre de map, va remplir
-**le param map, les directino et positions de depart du joueur
-*/
 
 int				fill_param_map(int fd, t_param *g_param)
 {

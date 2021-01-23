@@ -5,7 +5,7 @@ S ./textures/barrel.xpm
 SO ./textures/redbrick.xpm
 F 0, 0 , 255
 C 255, 0, 0
-R 1024 760
+R 0 0
 
 11111111111111111111111111
 12220000W000000000000000001

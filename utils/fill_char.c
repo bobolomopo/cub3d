@@ -18,7 +18,7 @@ char	*fill_char(char *line)
 	int		len;
 	char	*result;
 
-	len = ft_strlen_n(line, ' ');
+	len = ft_strlen(line);
 	if (!(result = malloc(sizeof(char) * len + 1)))
 		return (NULL);
 	i = 0;

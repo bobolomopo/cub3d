@@ -14,9 +14,10 @@
 
 static int	check_res(int x, int y)
 {
-	mlx_get_screen_size(g_param.dis.mlx, &g_param.max_res_x, &g_param.max_res_y);
+	mlx_get_screen_size(g_param.dis.mlx, &g_param.max_res_x,
+		&g_param.max_res_y);
 	if (x == 0 || y == 0)
-		return (parsing_error(NULL, -6));
+		return (-6);
 	if (x > g_param.max_res_x || x < 0)
 		g_param.res_x = g_param.max_res_x;
 	if (y > g_param.max_res_y || y < 0)

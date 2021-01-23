@@ -86,7 +86,7 @@ int			fill_param_rgb(char *line, t_param *g_param, char c)
 		if (ft_isdigit((int)line[i]) < 0 && line[i] != ',' && line[i] != '\n'
 				&& line[i] != ' ')
 			return (-5);
-		if (ft_isdigit((int)line[i]) > 0 && is_a_coma_before(line, i) > 0)
+		if (line[i] == ',')
 			count_coma++;
 		i++;
 	}

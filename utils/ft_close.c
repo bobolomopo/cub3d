@@ -33,14 +33,59 @@ int				parsing_error(char *ptr, int ret)
 	if (ret == -9)
 		write(1, "Error\nmap trop longue\n", 22);
 	free(ptr);
-	return (-1);
+	return (ft_close());
 }
 
-void			ft_close(void)
+int				msg_error(int ret)
 {
-	mlx_destroy_window(g_param.dis.mlx, g_param.dis.win);
-	free(g_param.dis.mlx);
+	if (ret == 1)
+		write(1, "Error\nmauvais nombre d'arguments\n", 33);
+	if (ret == 2)
+		write(1, "Error\nfichier .cub non valide\n", 30);
+	return (ft_close());
+}
+
+static void		destroy_images(void)
+{
+	if (g_param.textures[0].img)
+		mlx_destroy_image(g_param.dis.mlx, g_param.textures[0].img);
+	if (g_param.textures[1].img)
+		mlx_destroy_image(g_param.dis.mlx, g_param.textures[1].img);
+	if (g_param.textures[2].img)
+		mlx_destroy_image(g_param.dis.mlx, g_param.textures[2].img);
+	if (g_param.textures[3].img)
+		mlx_destroy_image(g_param.dis.mlx, g_param.textures[3].img);
+	if (g_param.textures[4].img)
+		mlx_destroy_image(g_param.dis.mlx, g_param.textures[4].img);
+	if (g_param.game.img)
+		mlx_destroy_image(g_param.dis.mlx, g_param.game.img);
+	if (g_param.dis.win)
+		mlx_destroy_window(g_param.dis.mlx, g_param.dis.win);
+}
+
+int				ft_close(void)
+{
+	int		i;
+
+	i = g_param.map_h;
 	if (g_param.fd)
 		close(g_param.fd);
+	if (g_param.text_north)
+		free(g_param.text_north);
+	if (g_param.text_west)
+		free(g_param.text_west);
+	if (g_param.text_east)
+		free(g_param.text_east);
+	if (g_param.text_sprite)
+		free(g_param.text_sprite);
+	if (g_param.text_south)
+		free(g_param.text_south);
+	if (g_param.map)
+	{
+		while (i-- > 0)
+			free(g_param.map[i]);
+		free(g_param.map);
+	}
+	destroy_images();
 	exit(0);
 }

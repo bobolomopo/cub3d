@@ -14,11 +14,11 @@
 
 int		main(int argc, char **argv)
 {
-	if (argc != 1)
-	{
-		if (argc > 2 || ft_strcmp(argv[1], "--save") != 0)
-			return (0);
-	}
+	if (argc < 2 || argc > 3)
+		return (msg_error(1));
+	if (argc == 3 && ft_strcmp(argv[2], "--save") != 0)
+		return (0);
+	g_param.cub = argv[1];
 	g_param.dis.mlx = mlx_init();
 	if (initialize(&g_param) < 0)
 		return (-1);
@@ -33,9 +33,10 @@ int		main(int argc, char **argv)
 	raycasting();
 	mlx_put_image_to_window(g_param.dis.mlx, g_param.dis.win,
 			g_param.game.img, 0, 0);
-	if (argv[1] && ft_strcmp(argv[1], "--save") == 0)
+	if (argv[1] && argv[2] && ft_strcmp(argv[2], "--save") == 0)
 		create_image();
 	mlx_hook(g_param.dis.win, 2, 1L << 0, manage_key, &g_param.dis);
+	mlx_hook(g_param.dis.win, 17, 0, ft_close, &g_param.dis);
 	mlx_loop(g_param.dis.mlx);
 	return (0);
 }

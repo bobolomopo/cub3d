@@ -6,7 +6,7 @@
 /*   By: jandre <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/29 15:58:47 by jandre            #+#    #+#             */
-/*   Updated: 2020/10/16 17:06:11 by jandre           ###   ########.fr       */
+/*   Updated: 2021/01/20 17:48:10 by jandre           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,26 +74,20 @@ int		get_next_line(int fd, char **line)
 	static char	*rest[OPEN_MAX];
 	char		buffer[BUFFER_SIZE + 1];
 	char		*ptr;
-	int			ret;
+	int			verif;
 
 	if (ft_initialize(fd, line, rest) < 0)
 		return (-1);
 	while (!(ft_strchr(rest[fd], '\n')) &&
-			(ret = read(fd, buffer, BUFFER_SIZE)) > 0)
+			(verif = read(fd, buffer, BUFFER_SIZE)) > 0)
 	{
-		buffer[ret] = '\0';
+		buffer[verif] = '\0';
 		ptr = rest[fd];
-		if (!(rest[fd] = ft_strjoin(rest[fd], buffer)))
-		{
-			free(rest[fd]);
+		if (!(rest[fd] = ft_strjoin(ptr, buffer)))
 			return (-1);
-		}
 		free(ptr);
 	}
-	if (ret < 0 || !(*line = ft_substr(rest[fd], 0, pos(rest[fd], '\n'))))
-	{
-		doublefree(rest[fd], *line);
+	if (!(*line = ft_substr(rest[fd], 0, pos(rest[fd], '\n'))))
 		return (-1);
-	}
 	return (ft_copy(rest, fd));
 }

@@ -55,6 +55,7 @@ typedef struct		s_img		{
 }					t_img;
 
 typedef	struct		s_param		{
+	char				*cub;
 	int					res_x;
 	int					res_y;
 	int					max_res_x;
@@ -138,6 +139,9 @@ typedef struct		s_bmp
 
 t_param				g_param;
 
+void				all_to_zero(void);
+int					msg_error(int ret);
+int					is_cub(char *str);
 int					ft_strlen(const char *str);
 char				*ft_substr(char const *s, int start, int len);
 char				*ft_strjoin(char const *s1, char const *s2);
@@ -148,7 +152,6 @@ int					ft_initialize(int fd, char **line, char **rest);
 int					ft_copy(char **rest, int fd);
 int					get_next_line(int fd, char **line);
 char				*ft_strnew(int size);
-int					ft_strlen_n(char *str, char stop);
 int					ft_nbrlen(int n);
 int					ft_isdigit(int c);
 int					ft_isin(char c, const char *str);
@@ -165,7 +168,7 @@ void				doublefree(char *str, char *str2);
 void				direction(char c, t_param *param);
 void				my_mlx_pixel_put(t_img *data, int x, int y, int color);
 int					initialize();
-void				ft_close();
+int					ft_close();
 void				draw_ceil_floor(int width, int height);
 void				raycasting();
 int					manage_key(int keycode);
