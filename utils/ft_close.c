@@ -21,9 +21,9 @@ int				parsing_error(char *ptr, int ret)
 	if (ret == -3)
 		write(1, "Error\nmanque des parametres\n", 28);
 	if (ret == -4)
-		write(1, "Error\nfichier de texture non valide\n", 38);
+		write(1, "Error\nfichier de texture non valide\n", 37);
 	if (ret == -5)
-		write(1, "Error\nparametre RGB non valide\n", 31);
+		write(1, "Error\nparametre RGB non valide\n", 32);
 	if (ret == -6)
 		write(1, "Error\nparametre resolution non valide\n", 38);
 	if (ret == -7)

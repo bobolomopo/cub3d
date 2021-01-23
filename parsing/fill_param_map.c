@@ -91,9 +91,11 @@ static int		verif_open(char **map, t_param *g_param)
 		i[1] = 0;
 		while (i[1] < ft_strlen(map[i[0]]))
 		{
-			if (ft_isin(map[i[0]][i[1]], " 012NESW") < 0)
+			if (!(map[i[0]][i[1]]) ||
+				ft_isin(map[i[0]][i[1]], " 012NESW") < 0)
 				return (parsing_error(NULL, -7));
-			if (ft_isin(map[i[0]][i[1]], "02NESW") > 0)
+			if ((map[i[0]][i[1]]) &&
+				ft_isin(map[i[0]][i[1]], "02NESW") > 0)
 			{
 				if (valid_c(map, i, g_param) < 0)
 					return (parsing_error(NULL, -7));

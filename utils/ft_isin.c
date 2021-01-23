@@ -26,6 +26,28 @@ int		ft_isin(char c, const char *str)
 	return (-1);
 }
 
+int		ft_isin_str(char *str, char *str2)
+{
+	int	i;
+	int	j;
+
+	i = 0;
+	while (str2[i])
+	{
+		printf("ok\n");
+		j = 0;
+		while (str[j])
+		{
+			if (str2[i] == str[j])
+				return (1);
+			j++;
+		}
+		i++;
+	}
+	
+	return (-1);
+}
+
 void	doublefree(char *str, char *str2)
 {
 	free(str);

@@ -18,7 +18,10 @@ char	*fill_char(char *line)
 	int		len;
 	char	*result;
 
-	len = ft_strlen(line);
+	i = 0;
+	while (line[i] && line[i] != ' ')
+		i++;
+	len = i;
 	if (!(result = malloc(sizeof(char) * len + 1)))
 		return (NULL);
 	i = 0;

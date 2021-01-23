@@ -187,5 +187,7 @@ void				raycasting_texturing();
 void				raycasting_sprite_init(t_sprite *sprite,
 									int *sprite_order, int i);
 void				raycasting_sprite_draw(double *z_buffer);
+int					get_to_map(int fd);
+int					ft_isin_str(char *str, char *str2);
 
 #endif

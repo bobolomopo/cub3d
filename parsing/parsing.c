@@ -63,3 +63,29 @@ int				parsing(int fd, t_param *g_param)
 		return (parsing_error(NULL, -3));
 	return (fill_param_map(fd, g_param));
 }
+
+int		get_to_map(int fd)
+{
+	char	*line[1];
+	char	*ptr;
+	int		ret;
+	int		i;
+
+	while (((ret = get_next_line(fd, line)) >= 0) && ft_isin_str("102NESW", *line) < 0)
+	{
+		ptr = *line;
+		i = 0;
+		while (*line[i])
+		{
+			if (*line[i] != ' ')
+				return (parsing_error(ptr, -7));
+			i++;
+		}
+		printf("%s\n", *line);
+		free(ptr);
+		if (ret == 0)
+			break ;
+	}
+	return (1);
+}
+

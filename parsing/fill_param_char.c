@@ -36,6 +36,14 @@ int		fill_param_char(char *line, t_param *g_param)
 			g_param->text_east = fill_char(line + i);
 		if (c == 'S' && c2 == ' ' && !g_param->text_sprite)
 			g_param->text_sprite = fill_char(line + i);
+		while (line[i] && line[i] != ' ')
+			i++;
+		while (line[i])
+		{
+			if (line[i] != ' ')
+				return (-4);
+			i++;
+		}
 		return (1);
 	}
 	return (-4);

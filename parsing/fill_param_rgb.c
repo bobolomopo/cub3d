@@ -31,18 +31,24 @@ static int	fill_rgb(char *line, int *color)
 	i = 0;
 	while (line[i] && line[i] == ' ')
 		i++;
+	if (ft_isdigit(line[i]) < 0)
+		return (-5);
 	color[0] = atoi(line);
 	if (ft_nbrlen(color[0]) > 3 || color[0] > 255)
 		return (-5);
 	i += ft_nbrlen(color[0]);
 	while (line[i] && (line[i] == ' ' || line[i] == ','))
 		i++;
+	if (ft_isdigit(line[i]) < 0)
+		return (-5);
 	color[1] = atoi(line + i);
 	if (ft_nbrlen(color[1]) > 3 || color[1] > 255)
 		return (-5);
 	i += ft_nbrlen(color[1]);
 	while (line[i] && (line[i] == ' ' || line[i] == ','))
 		i++;
+	if (ft_isdigit(line[i]) < 0)
+		return (-5);
 	color[2] = atoi(line + i);
 	if (ft_nbrlen(color[2]) > 3 || color[2] > 255)
 		return (-5);
