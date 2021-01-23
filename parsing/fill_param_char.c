@@ -12,7 +12,21 @@
 
 #include "../include/cub3d.h"
 
-int		fill_param_char(char *line, t_param *g_param)
+static void		fill_param_char2(char *line, char c, char c2, int i)
+{
+	if (c == 'N' && !g_param.text_north)
+		g_param.text_north = fill_char(line + i);
+	if (c == 'S' && c2 == 'O' && !g_param.text_south)
+		g_param.text_south = fill_char(line + i);
+	if (c == 'W' && !g_param.text_west)
+		g_param.text_west = fill_char(line + i);
+	if (c == 'E' && !g_param.text_east)
+		g_param.text_east = fill_char(line + i);
+	if (c == 'S' && c2 == ' ' && !g_param.text_sprite)
+		g_param.text_sprite = fill_char(line + i);
+}
+
+int				fill_param_char(char *line, t_param *g_param)
 {
 	int		i;
 	char	c;
@@ -26,16 +40,7 @@ int		fill_param_char(char *line, t_param *g_param)
 		i++;
 	if (line[i] != ' ')
 	{
-		if (c == 'N' && !g_param->text_north)
-			g_param->text_north = fill_char(line + i);
-		if (c == 'S' && c2 == 'O' && !g_param->text_south)
-			g_param->text_south = fill_char(line + i);
-		if (c == 'W' && !g_param->text_west)
-			g_param->text_west = fill_char(line + i);
-		if (c == 'E' && !g_param->text_east)
-			g_param->text_east = fill_char(line + i);
-		if (c == 'S' && c2 == ' ' && !g_param->text_sprite)
-			g_param->text_sprite = fill_char(line + i);
+		fill_param_char2(line, c, c2, i);
 		while (line[i] && line[i] != ' ')
 			i++;
 		while (line[i])

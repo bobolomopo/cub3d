@@ -24,21 +24,8 @@ static int	is_a_coma_before(char *line, int i)
 	return (-5);
 }
 
-static int	fill_rgb(char *line, int *color)
+static int	fill_rgb2(char *line, int *color, int i)
 {
-	int	i;
-
-	i = 0;
-	while (line[i] && line[i] == ' ')
-		i++;
-	if (ft_isdigit(line[i]) < 0)
-		return (-5);
-	color[0] = atoi(line);
-	if (ft_nbrlen(color[0]) > 3 || color[0] > 255)
-		return (-5);
-	i += ft_nbrlen(color[0]);
-	while (line[i] && (line[i] == ' ' || line[i] == ','))
-		i++;
 	if (ft_isdigit(line[i]) < 0)
 		return (-5);
 	color[1] = atoi(line + i);
@@ -54,6 +41,24 @@ static int	fill_rgb(char *line, int *color)
 		return (-5);
 	i += ft_nbrlen(color[2]);
 	return (i);
+}
+
+static int	fill_rgb(char *line, int *color)
+{
+	int	i;
+
+	i = 0;
+	while (line[i] && line[i] == ' ')
+		i++;
+	if (ft_isdigit(line[i]) < 0)
+		return (-5);
+	color[0] = atoi(line);
+	if (ft_nbrlen(color[0]) > 3 || color[0] > 255)
+		return (-5);
+	i += ft_nbrlen(color[0]);
+	while (line[i] && (line[i] == ' ' || line[i] == ','))
+		i++;
+	return (fill_rgb2(line, color, i));
 }
 
 static int	transform_rgb(char *line, t_param *g_param, char c)
