@@ -10,128 +10,156 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-/*#include "../include/cub3d.h"
+#include "../include/cub3d.h"
 
-static int		verif(char *line)
-{
-	int		i;
-
-	i = 0;
-	while (line[i])
-	{
-		if (ft_isin(line[i], "012NESW ") < 0 && line[i] != '\0')
-			return (-1);
-		i++;
-	}
-	return (1);
-}
-
-static int		fill_map(char **map, t_param *g_param)
-{
-	int		y;
-
-	y = 0;
-	while (map[y] != NULL)
-		y++;
-	if (!(g_param->map = malloc(sizeof(char *) * y + 1)))
-		return (-1);
-	y = 0;
-	while (map[y])
-	{
-		if (!(g_param->map[y] = malloc(sizeof(char) * ft_strlen(map[y]) + 1)))
-			return (-1);
-		ft_strcpy(g_param->map[y], map[y]);
-		y++;
-		if (y > g_param->map_h)
-			g_param->map_h = y;
-	}
-	g_param->map_w = y;
-	while (y-- > 0)
-		free(map[y]);
-	return (1);
-}
-
-static int		valid_c(char **map, int *i, t_param *g_param)
-{
-	if (ft_isin(map[i[0]][i[1]], "NESW") > 0)
-	{
-		if (i[2] == 1)
-			return (-1);
-		g_param->pos_x = i[0] + 0.5;
-		g_param->pos_y = i[1] + 0.5;
-		direction(map[i[0]][i[1]], g_param);
-		i[2] = 1;
-		map[i[0]][i[1]] = '0';
-	}
-	if (map[i[0]][i[1]] == '2')
-		g_param->num_sprite += 1;
-	if (!(map[i[0]][(i[1]) + 1]) ||
-		(ft_isin(map[i[0]][(i[1]) + 1], "012NESW") < 0))
-		return (-1);
-	if (!(map[i[0]][(i[1]) - 1]) ||
-		(ft_isin(map[i[0]][(i[1]) - 1], "012NESW") < 0))
-		return (-1);
-	if (!(map[(i[0]) + 1][i[1]]) ||
-		(ft_isin(map[(i[0]) + 1][i[1]], "012NESW") < 0))
-		return (-1);
-	if (!(map[(i[0]) - 1][i[1]]) ||
-		(ft_isin(map[(i[0]) - 1][i[1]], "012NESW") < 0))
-		return (-1);
-	return (1);
-}
-
-static int		verif_open(char **map, t_param *g_param)
-{
-	int		i[3];
-
-	i[2] = 0;
-	i[0] = 0;
-	while (map[i[0]])
-	{
-		i[1] = 0;
-		while (i[1] < ft_strlen(map[i[0]]))
-		{
-			if (!(map[i[0]][i[1]]) ||
-				ft_isin(map[i[0]][i[1]], " 012NESW") < 0)
-				return (parsing_error(NULL, -7));
-			if ((map[i[0]][i[1]]) &&
-				ft_isin(map[i[0]][i[1]], "02NESW") > 0)
-			{
-				if (valid_c(map, i, g_param) < 0)
-					return (parsing_error(NULL, -7));
-			}
-			i[1]++;
-		}
-		i[0]++;
-	}
-	return (fill_map(map, g_param));
-}
-
-int				fill_param_map(int fd, t_param *g_param)
+int		get_to_map(int fd)
 {
 	char	*line[1];
+	char	*ptr;
 	int		ret;
-	char	*map[100];
 	int		i;
 
-	i = 0;
+	while (((ret = get_next_line(fd, line)) >= 0) && ft_isin_str("102NESW", *line) < 0)
+	{
+		ptr = *line;
+		i = 0;
+		while (line[0][i])
+		{
+			if (line[0][i] != ' ')
+				return (parsing_error(ptr, -7));
+			i++;
+		}
+		free(ptr);
+		if (ret == 0)
+			break ;
+	}
+	return (copy_map(fd, line[0]));
+}
+
+int		free_map_buffer(int i, char **map, int ret)
+{
+	while (i >= 0)
+	{
+		free(map[i]);
+		i--;
+	}
+	if (ret == 1)
+		return (parsing_error(NULL, -9));
+	return (parsing_error(NULL, -7));
+}
+
+int		copy_map(int fd, char *str)
+{
+	int		i;
+	int		j;
+	char	*map[MAXMAPSIZE];
+	char	*line[1];
+	char	*ptr;
+	int		ret;
+
+	g_param.is_start = 0;
+	if (!str)
+		return (parsing_error(NULL, -7));
+	i = 1;
+	if (!(map[0] = malloc(sizeof(char) * ft_strlen(str) + 1)))
+		return (parsing_error(str, -1));
+	ft_strcpy(map[0], str);
+	free(str);
 	while ((ret = get_next_line(fd, line)) >= 0)
 	{
-		if (i >= 99)
-			return (parsing_error(*line, -9));
-		if (verif(*line) < 0)
-			return (parsing_error(*line, -7));
-		if (*line && **line != '\n' && ft_isin('1', *line) > 0)
+		if (i == MAXMAPSIZE)
+			return (free_map_buffer(i, map, 1));
+		if (!line[0][0])
+			return (free_map_buffer(i, map, 2));
+		ptr = *line;
+		j = 0;
+		while (line[0][j])
 		{
-			if (!(map[i] = ft_strnew(ft_strlen(*line) + 1)))
-				return (-1);
-			ft_strcpy(map[i++], *line);
+			if (ft_isin(line[0][j], " 012NESW") < 0)
+				return (parsing_error(ptr, -7));
+			if (ft_isin(line[0][j], "NESW") > 0)
+			{
+				if (g_param.is_start == 1)
+					return (free_map_buffer(i, map, 2));
+				g_param.is_start = 1;
+				g_param.map_start_x = j;
+				g_param.map_start_y = i;
+				direction(line[0][j], &g_param);
+				line[0][j] = '0';
+			}
+			j++;
 		}
-		free(*line);
+		if (!(map[i] = malloc(sizeof(char) * ft_strlen(line[0]) + 1)))
+			return (parsing_error(line[0], -1));
+		ft_strcpy(map[i], line[0]);
+		free(ptr);
+		i++;
 		if (ret == 0)
 			break ;
 	}
 	map[i] = NULL;
-	return (verif_open(map, g_param));
+	g_param.map_h = i;
+	g_param.num_sprite = 0;
+	if ((flood_fill(map, g_param.map_start_x, g_param.map_start_y)) < 0)
+		return (free_map_buffer(g_param.map_h, map, 2));
+	i = 0;
+	while (map[i] != NULL)
+	{
+		if (!(g_param.map[i] = malloc(sizeof(char) * ft_strlen(map[i]) + 1)))
+			return (parsing_error(NULL, -1));
+		j = 0;
+		while (map[i][j])
+		{
+			if (map[i][j] == 'F')
+				map[i][j] = '0';
+			if (map[i][j] == 'S' || map[i][j] == '2')
+			{
+				g_param.num_sprite += 1;
+				map[i][j] = '2';
+			}
+			j++;
+		}
+		ft_strcpy(g_param.map[i], map[i]);
+		free(map[i]);
+		i++;
+	}
+	g_param.map[i] = NULL;
+	return (1);
 }
-*/
+
+int		flood_fill(char **map, int start_x, int start_y)
+{
+	if (map[start_y][start_x] == '0')
+		map[start_y][start_x] = 'F';
+	if (map[start_y][start_x] == '2')
+		map[start_y][start_x] = 'S';
+	if (start_x + 1 < ft_strlen(map[start_y]) &&
+		map[start_y][start_x + 1] && (map[start_y][start_x + 1] == '0'
+		|| map[start_y][start_x + 1] == '2'))
+		flood_fill(map, start_x + 1, start_y);
+	if (start_x + 1 >= ft_strlen(map[start_y])
+	|| map[start_y][start_x + 1] == ' ')
+		return (-1);
+	if ((start_x - 1 >= 0) &&
+		map[start_y][start_x - 1]
+		&& (map[start_y][start_x - 1] == '0'
+		|| map[start_y][start_x - 1] == '2'))
+		flood_fill(map, start_x - 1, start_y);
+	if (start_x - 1 < 0 || map[start_y][start_x - 1] == ' ')
+		return (-1);
+	if ((map[start_y + 1]) && start_x < ft_strlen(map[start_y + 1]) &&
+		map[start_y + 1][start_x] && (map[start_y + 1][start_x] == '0'
+			|| map[start_y + 1][start_x] == '2'))
+		flood_fill(map, start_x, start_y + 1);
+	if (!(map[start_y + 1]) || start_x >= ft_strlen(map[start_y + 1]) ||
+		map[start_y + 1][start_x] == ' ')
+		return (-1);
+	if (map[start_y - 1] && start_x < ft_strlen(map[start_y - 1]) &&
+		(map[start_y - 1][start_x] == '0'
+		|| map[start_y - 1][start_x] == '2'))
+		flood_fill(map, start_x, start_y - 1);
+	if (!map[start_y - 1] || start_x >= ft_strlen(map[start_y - 1]) ||
+		map[start_y - 1][start_x] == ' ')
+		return (-1);
+	return (1);
+}

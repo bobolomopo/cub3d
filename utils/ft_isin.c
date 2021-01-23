@@ -43,7 +43,6 @@ int		ft_isin_str(char *str, char *str2)
 		}
 		i++;
 	}
-	
 	return (-1);
 }
 
