@@ -108,8 +108,8 @@ int					initialize(t_param *g_param)
 	all_to_zero();
 	if (parsing(g_param->fd, g_param) < 0)
 		return (-1);
-	g_param->pos_x = g_param->map_start_x;
-	g_param->pos_y = g_param->map_start_y;
+	g_param->pos_x = (double)g_param->map_start_y + 0.5;
+	g_param->pos_y = (double)g_param->map_start_x + 0.5;
 	if (test_structure() < 0)
 		return (-1);
 	return (1);

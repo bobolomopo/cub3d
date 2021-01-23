@@ -67,7 +67,7 @@ int				ft_close(void)
 {
 	int		i;
 
-	i = g_param.map_h;
+	i = MAXMAPSIZE;
 	if (g_param.fd)
 		close(g_param.fd);
 	if (g_param.text_north)
