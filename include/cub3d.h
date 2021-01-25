@@ -195,7 +195,7 @@ void				raycasting_sprite_init(t_sprite *sprite,
 void				raycasting_sprite_draw(double *z_buffer);
 int					get_to_map(int fd);
 int					ft_isin_str(char *str, char *str2);
-int					copy_map(int fd, char *line);
+int					copy_map(int fd, char *line, int ret);
 int					flood_fill(char **map, int start_x, int start_y);
 
 #endif
