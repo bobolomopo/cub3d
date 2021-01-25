@@ -197,5 +197,10 @@ int					get_to_map(int fd);
 int					ft_isin_str(char *str, char *str2);
 int					copy_map(int fd, char *line, int ret);
 int					flood_fill(char **map, int start_x, int start_y);
+int					copy_map2(int fd, char **map, int ret);
+int					copy_first_line(char *str, char **map, int ret);
+int					define_start(char *str, int i);
+int					fill_map(char **map);
+int					free_map_buffer(int i, char **map, int ret);
 
 #endif
